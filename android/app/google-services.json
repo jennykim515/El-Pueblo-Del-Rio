@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "355151692649",
+    "project_id": "cs401-3e77f",
+    "storage_bucket": "cs401-3e77f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:355151692649:android:7a995e37bac8d523fd73f8",
+        "android_client_info": {
+          "package_name": "com.example.pueblo_del_rio"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvJxkdX3_G9WImWD-FAOVUDN_7_gGJeiI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
