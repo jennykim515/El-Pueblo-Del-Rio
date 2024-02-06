@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:pueblo_del_rio/views/authPage.dart';
 import 'package:pueblo_del_rio/views/login.dart';
 import 'package:pueblo_del_rio/views/splash.dart';
 import 'firebase_options.dart';
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       //home: const SplashPage(),
-      home:LoginPage()
+      home:const AuthPage()
     );
   }
 }
