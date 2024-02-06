@@ -19,7 +19,7 @@
 //         body:Container(
 //           decoration:BoxDecoration(
 //               image:DecorationImage(
-//                 image: AssetImage("/Users/eveyzhang/AndroidStudioProjects/El-Pueblo-Del-Rio/lib/assets/Background.png"),
+//                 image: AssetImage("lib/assets/Background.png"),
 //                 fit:BoxFit.cover,
 //               )
 //           ),
@@ -32,7 +32,7 @@
 //
 //                   // logo
 //                   Image.asset(
-//                     "/Users/eveyzhang/AndroidStudioProjects/El-Pueblo-Del-Rio/lib/assets/logo.png",
+//                     "lib/assets/logo.png",
 //                     width: 150,  // Set width or height as per your design requirements
 //                     height: 150,
 //                   ),
