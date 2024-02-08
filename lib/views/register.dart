@@ -30,7 +30,7 @@ class RegisterPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         body:Container(
-          decoration:BoxDecoration(
+          decoration:const BoxDecoration(
               image:DecorationImage(
                 image: AssetImage("lib/assets/Background.png"),
                 fit:BoxFit.cover,
@@ -53,7 +53,7 @@ class RegisterPage extends StatelessWidget {
                   const SizedBox(height: 50),
 
                   // welcome back, you've been missed!
-                  Text(
+                  const Text(
                     'Register',
                     style: TextStyle(
                       color: Colors.white,
@@ -83,7 +83,7 @@ class RegisterPage extends StatelessWidget {
                   const SizedBox(height: 10),
 
                   //forgot password?
-                  Text(
+                  const Text(
                     'Forgot Password?',
                     style: TextStyle(color: Colors.white),
                   ),
@@ -93,6 +93,7 @@ class RegisterPage extends StatelessWidget {
                   // sign in button
                   MyButton(
                     onTap: registerUser,
+                    buttonText: 'Register', // Assuming MyButton supports buttonText
                   ),
 
                   const SizedBox(height: 50),
