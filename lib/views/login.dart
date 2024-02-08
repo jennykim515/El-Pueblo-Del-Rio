@@ -1,6 +1,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pueblo_del_rio/views/forgotPasswordPage.dart';
 
 import 'MyTextField.dart';
 import 'mainButton.dart';
@@ -87,16 +88,24 @@ class LoginPage extends StatelessWidget {
                   const SizedBox(height: 10),
               
                 //forgot password?
-                  Text(
-                    'Forgot Password?',
-                    style: TextStyle(color: Colors.white),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ForgotPasswordPage()),
+                      );
+                    },
+                    child: const Text(
+                      'Forgot Password?',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
               
                   const SizedBox(height: 25),
               
                   // sign in button
                   MyButton(
-                    onTap: signUserIn,
+                    onTap: signUserIn, buttonText: 'Log In',
                   ),
               
                   const SizedBox(height: 50),
@@ -145,36 +154,28 @@ class LoginPage extends StatelessWidget {
                   //   ],
                   // ),
                   //
-                  const SizedBox(height: 50),
-
-                  // not a member? register now
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Not a member?',
-                        style: TextStyle(color: Colors.grey[700]),
-                      ),
-                      const SizedBox(width: 4),
-                      new GestureDetector(
-                      //   onTap:(){
-                      //     Navigator.push(context, "")
-                      //   }
-                      //   const Text(
-                      //   'Register now',
-                      //   style: TextStyle(
-                      //     color: Colors.blue,
-                      //     fontWeight: FontWeight.bold,
-                      //   ),
-                      // ),
-
-
-                      )
-
+                  // const SizedBox(height: 50),
+                  //
+                  // // not a member? register now
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   children: [
+                  //     Text(
+                  //       'Not a member?',
+                  //       style: TextStyle(color: Colors.grey[700]),
+                  //     ),
+                  //     const SizedBox(width: 4),
+                  //     const Text(
+                  //       'Register now',
+                  //       style: TextStyle(
+                  //         color: Colors.blue,
+                  //         fontWeight: FontWeight.bold,
+                  //       ),
+                  //     ),
+                  //   ],
+                  // )
                 ],
               ),
-              ],
-            ),
             ),
           ),
         ),
