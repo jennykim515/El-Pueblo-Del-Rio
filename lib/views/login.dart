@@ -145,28 +145,36 @@ class LoginPage extends StatelessWidget {
                   //   ],
                   // ),
                   //
-                  // const SizedBox(height: 50),
-                  //
-                  // // not a member? register now
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.center,
-                  //   children: [
-                  //     Text(
-                  //       'Not a member?',
-                  //       style: TextStyle(color: Colors.grey[700]),
-                  //     ),
-                  //     const SizedBox(width: 4),
-                  //     const Text(
-                  //       'Register now',
-                  //       style: TextStyle(
-                  //         color: Colors.blue,
-                  //         fontWeight: FontWeight.bold,
-                  //       ),
-                  //     ),
-                  //   ],
-                  // )
+                  const SizedBox(height: 50),
+
+                  // not a member? register now
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Not a member?',
+                        style: TextStyle(color: Colors.grey[700]),
+                      ),
+                      const SizedBox(width: 4),
+                      new GestureDetector(
+                      //   onTap:(){
+                      //     Navigator.push(context, "")
+                      //   }
+                      //   const Text(
+                      //   'Register now',
+                      //   style: TextStyle(
+                      //     color: Colors.blue,
+                      //     fontWeight: FontWeight.bold,
+                      //   ),
+                      // ),
+
+
+                      )
+
                 ],
               ),
+              ],
+            ),
             ),
           ),
         ),
