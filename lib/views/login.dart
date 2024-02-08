@@ -2,6 +2,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pueblo_del_rio/views/forgotPasswordPage.dart';
+import 'package:pueblo_del_rio/views/register.dart';
 
 import 'MyTextField.dart';
 import 'mainButton.dart';
@@ -85,7 +86,7 @@ class LoginPage extends StatelessWidget {
                     obscureText: true,
                   ),
               
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 15),
               
                 //forgot password?
                   InkWell(
@@ -98,6 +99,22 @@ class LoginPage extends StatelessWidget {
                     child: const Text(
                       'Forgot Password?',
                       style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+              
+                  const SizedBox(height: 15),
+
+                  //register here
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => RegisterPage()),
+                      );
+                    },
+                    child: const Text(
+                      'Register here',
+                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                   ),
               
