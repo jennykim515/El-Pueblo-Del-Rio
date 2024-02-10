@@ -1,30 +1,25 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../controllers/firebaseAuthService.dart';
+import '../models/user.dart';
 import 'MyTextField.dart';
 import 'mainButton.dart';
 
-class RegisterPage extends StatelessWidget {
+class RegisterPage extends StatefulWidget {
   RegisterPage({super.key});
 
-  // text editing controllers
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
 
-  // sign user in method
-  Future<void> registerUser() async {
-    //test account is test@gmail.com, test123
-    try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      );
-      // Navigate to the next screen upon successful sign-in
-    } catch (e) {
-      // Log or display the error message
-      print('Error signing in: $e');
-    }
-  }
+class _RegisterPageState extends State<RegisterPage> {
+  final FirebaseAuthService _auth = FirebaseAuthService();
+
+  // text editing controllers
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _nameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -66,8 +61,16 @@ class RegisterPage extends StatelessWidget {
 
                   // username textfield
                   MyTextField(
-                    controller: emailController,
-                    hintText: 'Username',
+                    controller: _emailController,
+                    hintText: 'Email',
+                    obscureText: false,
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  MyTextField(
+                    controller: _nameController,
+                    hintText: 'Name',
                     obscureText: false,
                   ),
 
@@ -75,7 +78,7 @@ class RegisterPage extends StatelessWidget {
 
                   // password textfield
                   MyTextField(
-                    controller: passwordController,
+                    controller: _passwordController,
                     hintText: 'Password',
                     obscureText: true,
                   ),
@@ -92,7 +95,7 @@ class RegisterPage extends StatelessWidget {
 
                   // sign in button
                   MyButton(
-                    onTap: registerUser,
+                    onTap: _register,
                     buttonText: 'Register', // Assuming MyButton supports buttonText
                   ),
 
@@ -125,8 +128,6 @@ class RegisterPage extends StatelessWidget {
                       ],
                     ),
                   ),
-
-                  const SizedBox(height: 50),
 
                   // // google + apple sign in buttons
                   // Row(
@@ -171,5 +172,21 @@ class RegisterPage extends StatelessWidget {
         )
 
     );
+  }
+
+  void _register() async {
+    String email = _emailController.text;
+    String password = _passwordController.text;
+    String name = _nameController.text;
+
+    AppUser? user = await _auth.signUpWithEmailAndPassword(email, password, name);
+
+    if(user != null) {
+      print("User is successfully created");
+      // navigate
+      Navigator.pushNamed(context, "home");
+    } else {
+      print("Some error happened in register");
+    }
   }
 }

@@ -1,45 +1,35 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:pueblo_del_rio/views/forgotPasswordPage.dart';
 import 'package:pueblo_del_rio/views/register.dart';
 
+import '../controllers/firebaseAuthService.dart';
+import '../models/user.dart';
 import 'MyTextField.dart';
 import 'mainButton.dart';
 
-class LoginPage extends StatelessWidget {
-  LoginPage({super.key});
+class LoginPage extends StatefulWidget {
+  LoginPage({Key? key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final FirebaseAuthService _auth = FirebaseAuthService();
 
   // text editing controllers
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-
-  // sign user in method
-  Future<void> signUserIn() async {
-    //test account is test@gmail.com, test123
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      );
-      // Navigate to the next screen upon successful sign-in
-    } catch (e) {
-      // Log or display the error message
-      print('Error signing in: $e');
-    }
-  }
-
-
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:Container(
-        decoration:const BoxDecoration(
-          image:DecorationImage(
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
             image: AssetImage("lib/assets/Background.png"),
-            fit:BoxFit.cover,
-          )
+            fit: BoxFit.cover,
+          ),
         ),
         child: SafeArea(
           child: Center(
@@ -47,17 +37,17 @@ class LoginPage extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 40),
-              
+                  const SizedBox(height: 50),
+
                   // logo
                   Image.asset(
                     "lib/assets/logo.png",
-                    width: 150,  // Set width or height as per your design requirements
+                    width: 150, // Set width or height as per your design requirements
                     height: 150,
                   ),
-              
-                  const SizedBox(height: 30),
-              
+
+                  const SizedBox(height: 50),
+
                   // welcome back, you've been missed!
                   const Text(
                     'Login',
@@ -67,66 +57,48 @@ class LoginPage extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-              
+
                   const SizedBox(height: 25),
-              
-                  // email textfield
+
+                  // username textfield
                   MyTextField(
-                    controller: emailController,
+                    controller: _emailController,
                     hintText: 'Email',
                     obscureText: false,
                   ),
-              
-                  const SizedBox(height: 20),
-              
+
+                  const SizedBox(height: 10),
+
                   // password textfield
                   MyTextField(
-                    controller: passwordController,
+                    controller: _passwordController,
                     hintText: 'Password',
                     obscureText: true,
                   ),
-              
-                  const SizedBox(height: 15),
-              
-                //forgot password?
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ForgotPasswordPage()),
-                      );
+
+                  const SizedBox(height: 10),
+
+                  //forgot password?
+                  TextButton(
+                    onPressed: () {
+                      // Implement forgot password functionality here
                     },
                     child: const Text(
                       'Forgot Password?',
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
-              
-                  const SizedBox(height: 15),
 
-                  //register here
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => RegisterPage()),
-                      );
-                    },
-                    child: const Text(
-                      'Register here',
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-              
                   const SizedBox(height: 25),
-              
+
                   // sign in button
                   MyButton(
-                    onTap: signUserIn, buttonText: 'Log In',
+                    onTap: _login,
+                    buttonText: 'Login', // Assuming MyButton supports buttonText
                   ),
-              
+
                   const SizedBox(height: 50),
-              
+
                   // or continue with
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -154,52 +126,42 @@ class LoginPage extends StatelessWidget {
                       ],
                     ),
                   ),
-              
+
                   const SizedBox(height: 50),
-              
-                  // // google + apple sign in buttons
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.center,
-                  //   children: const [
-                  //     // google button
-                  //     SquareTile(imagePath: 'lib/images/google.png'),
-                  //
-                  //     SizedBox(width: 25),
-                  //
-                  //     // apple button
-                  //     SquareTile(imagePath: 'lib/images/apple.png')
-                  //   ],
-                  // ),
-                  //
-                  // const SizedBox(height: 50),
-                  //
-                  // // not a member? register now
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.center,
-                  //   children: [
-                  //     Text(
-                  //       'Not a member?',
-                  //       style: TextStyle(color: Colors.grey[700]),
-                  //     ),
-                  //     const SizedBox(width: 4),
-                  //     const Text(
-                  //       'Register now',
-                  //       style: TextStyle(
-                  //         color: Colors.blue,
-                  //         fontWeight: FontWeight.bold,
-                  //       ),
-                  //     ),
-                  //   ],
-                  // )
+
+                  // Register link
+                  TextButton(
+                    onPressed: () {
+                      // Navigate to the register page
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => RegisterPage()));
+                    },
+                    child: const Text(
+                      "Don't have an account? Register here",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+
                 ],
               ),
             ),
           ),
         ),
-
-
-      )
-
+      ),
     );
+  }
+
+  void _login() async {
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    AppUser? user = await _auth.signInWithEmailAndPassword(email, password);
+
+    if (user != null) {
+      print("User is successfully created");
+      // navigate
+      Navigator.pushNamed(context, "home");
+    } else {
+      print("Some error happened in login");
+    }
   }
 }

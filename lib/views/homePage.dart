@@ -1,20 +1,32 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:pueblo_del_rio/views/signOutButton.dart';// Import the SignOutButton widget if it's defined in a separate file
-// import 'path_to_your_sign_out_button_widget.dart';
+import 'package:pueblo_del_rio/controllers/firebaseAuthService.dart';
+import 'package:pueblo_del_rio/models/user.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
 
-//CODE AUGMENTED FROM MITCH KOKO @ github @mitchkoko
+  @override
+  _HomePageState createState() => _HomePageState();
+}
 
-class HomePage extends StatelessWidget {
-  HomePage({super.key});
+class _HomePageState extends State<HomePage> {
+  final _firebaseAuthService = FirebaseAuthService();
+  AppUser? user;
 
-  final user = FirebaseAuth.instance.currentUser!;
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserDetails();
+  }
 
-  // sign user out method
+  Future<void> _fetchUserDetails() async {
+    user = await _firebaseAuthService.fetchUserDetails();
+    setState(() {}); // Update the UI with the fetched user details
+  }
+
   void signUserOut() {
     FirebaseAuth.instance.signOut();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -29,15 +41,32 @@ class HomePage extends StatelessWidget {
           )
         ],
       ),
-      body: const Center(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center, // Center the column
-          children: <Widget>[
-            Text("Logged IN"),
-            SizedBox(height: 20), // Provide some spacing between the text and the button
-            SignOutButton(), // Assuming SignOutButton is your custom sign-out button widget
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            user != null
+                ? Text(
+              'Hi, ${user!.name}',
+              style: TextStyle(fontSize: 16),
+            )
+                : SizedBox(), // If user is null, show an empty SizedBox
+            SizedBox(height: 20), // Add vertical spacing
+            _buildSearchBar(), // Add search bar widget
+            // Add any other widgets or functionalities you want to include on the home page
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildSearchBar() {
+    return TextField(
+      decoration: InputDecoration(
+        hintText: 'Search...',
+        prefixIcon: Icon(Icons.search),
+        border: OutlineInputBorder(),
       ),
     );
   }
