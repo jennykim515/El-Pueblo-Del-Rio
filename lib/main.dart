@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:pueblo_del_rio/views/MessagingPage.dart';
+import 'package:pueblo_del_rio/views/ResourcesPage.dart';
 import 'package:pueblo_del_rio/views/authPage.dart';
 import 'package:pueblo_del_rio/views/homePage.dart';
 import 'package:pueblo_del_rio/views/login.dart';
@@ -30,6 +32,8 @@ class MyApp extends StatelessWidget {
       home: const AuthPage(),
       routes: {
         '/home': (context) => const HomePage(),
+        '/messaging': (context) => const MessagingPage(),
+        '/resources': (context) => const ResourcesPage()
       }
     );
   }

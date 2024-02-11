@@ -29,4 +29,27 @@ class PostController {
       return []; // Return an empty list if an error occurs
     }
   }
+
+  Future<List<Post>> searchPosts(String query) async {
+    try {
+      QuerySnapshot querySnapshot = await _firestore
+          .collection('posts')
+          .where('title', isEqualTo: query)
+          .get();
+
+      List<Post> posts = querySnapshot.docs.map((doc) {
+        return Post.fromFirestore(doc);
+      }).toList();
+
+      return posts;
+    } catch (e) {
+      print('Error searching posts: $e');
+      // Return an empty list if there's an error
+      return [];
+    }
+  }
+
+
+
+
 }

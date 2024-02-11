@@ -19,6 +19,7 @@ class _HomePageState extends State<HomePage> {
   final _postController = PostController();
   AppUser? user;
   int _selectedIndex = 0;
+  String _searchQuery = ''; // current search query
 
   @override
   void initState() {
@@ -75,7 +76,9 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(height: 10),
             Expanded(
               child: FutureBuilder<List<Post>>(
-                future: _postController.getAllPostsSortedByDate(),
+                future: _searchQuery.isEmpty
+                    ? _postController.getAllPostsSortedByDate()
+                    : _postController.searchPosts(_searchQuery), // Use searchPosts if search query is not empty
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: CircularProgressIndicator());
@@ -106,8 +109,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildSearchBar() {
-    return const TextField(
-      decoration: InputDecoration(
+    return TextField(
+      onChanged: (value) {
+        setState(() {
+          _searchQuery = value; // search query updated when text changes
+        });
+      },
+      decoration: const InputDecoration(
         hintText: 'Search...',
         prefixIcon: Icon(Icons.search),
         border: OutlineInputBorder(),
