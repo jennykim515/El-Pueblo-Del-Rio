@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pueblo_del_rio/controllers/firebaseAuthService.dart';
+import 'package:pueblo_del_rio/controllers/postController.dart'; // Import the PostController
 import 'package:pueblo_del_rio/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:pueblo_del_rio/models/post.dart'; // Import the Post model
 
 import 'navigationBar.dart';
 
@@ -14,6 +16,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _firebaseAuthService = FirebaseAuthService();
+  final _postController = PostController(); // Create an instance of PostController
   AppUser? user;
   int _selectedIndex = 0;
 
@@ -37,6 +40,7 @@ class _HomePageState extends State<HomePage> {
       _selectedIndex = index;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,10 +67,43 @@ class _HomePageState extends State<HomePage> {
                 : SizedBox(), // If user is null, show an empty SizedBox
             SizedBox(height: 20), // Add vertical spacing
             _buildSearchBar(), // Add search bar widget
-            // Add any other widgets or functionalities you want to include on the home page
+            SizedBox(height: 20), // Add vertical spacing
+            Text(
+              'Recent News', // Text before the navigation bar
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10), // Add vertical spacing
+            FutureBuilder<List<Post>>(
+              future: _postController.getAllPostsSortedByDate(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                  // Only build ListView.builder when data is available and not empty
+                  List<Post> posts = snapshot.data!;
+                  return ListView.builder(
+                    itemCount: posts.length,
+                    itemBuilder: (context, index) {
+                      Post post = posts[index];
+                      return ListTile(
+                        title: Text(post.title),
+                        subtitle: Text(post.body),
+                      );
+                    },
+                  );
+                } else {
+                  // Handle case when snapshot has no data or empty data
+                  return Text('No posts available.');
+                }
+              },
+            ),
+
           ],
         ),
       ),
+
       bottomNavigationBar: ReusableBottomNavigationBar(
         selectedIndex: _selectedIndex,
         onItemTapped: _onItemTapped,

@@ -64,13 +64,18 @@ class FirebaseAuthService {
     }
   }
 
-
   // sign in method
   Future<AppUser?> signInWithEmailAndPassword(String email, String password) async {
     try {
+      // Sign in with email and password using FirebaseAuth
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
       return fetchUserDetails();
     } catch(e) {
-      print("Some error occurred");
+      print(e);
     }
     return null;
   }
