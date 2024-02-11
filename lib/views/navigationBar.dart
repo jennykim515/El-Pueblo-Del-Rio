@@ -2,19 +2,27 @@ import 'package:flutter/material.dart';
 
 class ReusableBottomNavigationBar extends StatelessWidget {
   final int selectedIndex;
-  final ValueChanged<int> onItemTapped;
 
   const ReusableBottomNavigationBar({
     Key? key,
     required this.selectedIndex,
-    required this.onItemTapped,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       currentIndex: selectedIndex,
-      onTap: onItemTapped,
+      onTap: (index) {
+        // Define the routes for each item
+        List<String> routes = [
+          '/home',
+          '/messaging',
+          '/resources',
+        ];
+
+        // Navigate to the corresponding route
+        Navigator.pushReplacementNamed(context, routes[index]);
+      },
       items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.home),

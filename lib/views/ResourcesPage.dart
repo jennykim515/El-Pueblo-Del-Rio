@@ -7,11 +7,11 @@ class ResourcesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Resources Page'),
+        title: const Text('Resources Page'),
       ),
       body: const Center(
         child: Text(
-          'Replace later with messaging page.',
+          'Replace later with resources page.',
           style: TextStyle(fontSize: 20.0),
         ),
       ),

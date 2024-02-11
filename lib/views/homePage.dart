@@ -103,7 +103,6 @@ class _HomePageState extends State<HomePage> {
       ),
       bottomNavigationBar: ReusableBottomNavigationBar(
         selectedIndex: _selectedIndex,
-        onItemTapped: _onItemTapped,
       ),
     );
   }
