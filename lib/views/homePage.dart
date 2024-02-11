@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:pueblo_del_rio/controllers/firebaseAuthService.dart';
 import 'package:pueblo_del_rio/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import 'navigationBar.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -12,6 +15,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final _firebaseAuthService = FirebaseAuthService();
   AppUser? user;
+  int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -28,6 +32,11 @@ class _HomePageState extends State<HomePage> {
     FirebaseAuth.instance.signOut();
   }
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,11 +67,15 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
+      bottomNavigationBar: ReusableBottomNavigationBar(
+        selectedIndex: _selectedIndex,
+        onItemTapped: _onItemTapped,
+      ),
     );
   }
 
   Widget _buildSearchBar() {
-    return TextField(
+    return const TextField(
       decoration: InputDecoration(
         hintText: 'Search...',
         prefixIcon: Icon(Icons.search),
