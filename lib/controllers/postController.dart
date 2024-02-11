@@ -8,16 +8,18 @@ class PostController {
     try {
       QuerySnapshot<Map<String, dynamic>> snapshot = await _firestore
           .collection('posts')
-          .orderBy('date', descending: true) // Sort posts by date in descending order
+          .orderBy('date', descending: true)
           .get();
 
       List<Post> posts = snapshot.docs.map((doc) {
+        Timestamp timestamp = doc['date'];
+        DateTime dateTime = timestamp.toDate(); // convert to DateTime
         return Post(
           id: doc.id,
           author: doc['author'],
           title: doc['title'],
           body: doc['body'],
-          date: doc['date'],
+          date: dateTime,
         );
       }).toList();
 

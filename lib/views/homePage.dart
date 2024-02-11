@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:pueblo_del_rio/controllers/firebaseAuthService.dart';
-import 'package:pueblo_del_rio/controllers/postController.dart'; // Import the PostController
+import 'package:pueblo_del_rio/controllers/postController.dart';
 import 'package:pueblo_del_rio/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:pueblo_del_rio/models/post.dart'; // Import the Post model
-
+import 'package:pueblo_del_rio/models/post.dart';
 import 'navigationBar.dart';
+import 'postWidget.dart'; // Import the PostWidget
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -16,7 +16,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _firebaseAuthService = FirebaseAuthService();
-  final _postController = PostController(); // Create an instance of PostController
+  final _postController = PostController();
   AppUser? user;
   int _selectedIndex = 0;
 
@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _fetchUserDetails() async {
     user = await _firebaseAuthService.fetchUserDetails();
-    setState(() {}); // Update the UI with the fetched user details
+    setState(() {});
   }
 
   void signUserOut() {
@@ -50,7 +50,7 @@ class _HomePageState extends State<HomePage> {
         actions: [
           IconButton(
             onPressed: signUserOut,
-            icon: Icon(Icons.logout),
+            icon: const Icon(Icons.logout),
           )
         ],
       ),
@@ -62,48 +62,42 @@ class _HomePageState extends State<HomePage> {
             user != null
                 ? Text(
               'Hi, ${user!.name}',
-              style: TextStyle(fontSize: 16),
+              style: const TextStyle(fontSize: 16),
             )
-                : SizedBox(), // If user is null, show an empty SizedBox
-            SizedBox(height: 20), // Add vertical spacing
-            _buildSearchBar(), // Add search bar widget
-            SizedBox(height: 20), // Add vertical spacing
-            Text(
-              'Recent News', // Text before the navigation bar
+                : const SizedBox(),
+            const SizedBox(height: 20),
+            _buildSearchBar(),
+            const SizedBox(height: 20),
+            const Text(
+              'Recent News',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 10), // Add vertical spacing
-            FutureBuilder<List<Post>>(
-              future: _postController.getAllPostsSortedByDate(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                  // Only build ListView.builder when data is available and not empty
-                  List<Post> posts = snapshot.data!;
-                  return ListView.builder(
-                    itemCount: posts.length,
-                    itemBuilder: (context, index) {
-                      Post post = posts[index];
-                      return ListTile(
-                        title: Text(post.title),
-                        subtitle: Text(post.body),
-                      );
-                    },
-                  );
-                } else {
-                  // Handle case when snapshot has no data or empty data
-                  return Text('No posts available.');
-                }
-              },
+            const SizedBox(height: 10),
+            Expanded(
+              child: FutureBuilder<List<Post>>(
+                future: _postController.getAllPostsSortedByDate(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                    return ListView.builder(
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        Post post = snapshot.data![index];
+                        return PostWidget(post: post);
+                      },
+                    );
+                  } else {
+                    return const Center(child: Text('No posts available.'));
+                  }
+                },
+              ),
             ),
-
           ],
         ),
       ),
-
       bottomNavigationBar: ReusableBottomNavigationBar(
         selectedIndex: _selectedIndex,
         onItemTapped: _onItemTapped,
