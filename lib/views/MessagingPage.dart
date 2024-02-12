@@ -28,6 +28,7 @@ class MessagePageState extends State<MessagingPage>{
       ),
       bottomNavigationBar: ReusableBottomNavigationBar(
         selectedIndex: _selectedIndex,
+
       ),
 
     );
