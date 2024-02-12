@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'MyTextField.dart'; // Your custom text field widget
-import 'mainButton.dart'; // Your custom button widget
+import '../nav/mainButton.dart';
+import '../nav/MyTextField.dart'; // Your custom text field widget
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});

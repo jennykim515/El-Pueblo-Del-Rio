@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 
 import '../controllers/firebaseAuthService.dart';
 import '../models/user.dart';
-import 'MyTextField.dart';
-import 'mainButton.dart';
+import '../nav/mainButton.dart';
+import '../nav/MyTextField.dart';
+import 'login.dart';
 
 class RegisterPage extends StatefulWidget {
   RegisterPage({super.key});
@@ -36,7 +37,7 @@ class _RegisterPageState extends State<RegisterPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 50),
+                  const SizedBox(height: 25),
 
                   // logo
                   Image.asset(
@@ -45,7 +46,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     height: 150,
                   ),
 
-                  const SizedBox(height: 50),
+                  const SizedBox(height: 20),
 
                   // welcome back, you've been missed!
                   const Text(
@@ -57,7 +58,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                   ),
 
-                  const SizedBox(height: 25),
+                  const SizedBox(height: 15),
 
                   // username textfield
                   MyTextField(
@@ -91,7 +92,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     style: TextStyle(color: Colors.white),
                   ),
 
-                  const SizedBox(height: 25),
+                  const SizedBox(height: 20),
 
                   // sign in button
                   MyButton(
@@ -99,13 +100,24 @@ class _RegisterPageState extends State<RegisterPage> {
                     buttonText: 'Register', // Assuming MyButton supports buttonText
                   ),
 
-                  const SizedBox(height: 50),
+                  const SizedBox(height: 20),
+                  TextButton(
+                    onPressed: () {
+                      // Navigate to the register page
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginPage()));
+                    },
+                    child: const Text(
+                      "Already have an account? Login here ",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
 
                   // or continue with
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: Row(
                       children: [
+
                         Expanded(
                           child: Divider(
                             thickness: 0.5,

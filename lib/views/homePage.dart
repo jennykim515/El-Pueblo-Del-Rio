@@ -4,7 +4,7 @@ import 'package:pueblo_del_rio/controllers/postController.dart';
 import 'package:pueblo_del_rio/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pueblo_del_rio/models/post.dart';
-import 'navigationBar.dart';
+import '../nav/navigationBar.dart';
 import 'postWidget.dart'; // Import the PostWidget
 
 class HomePage extends StatefulWidget {

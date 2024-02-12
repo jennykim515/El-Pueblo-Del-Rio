@@ -4,8 +4,8 @@ import 'package:pueblo_del_rio/views/register.dart';
 
 import '../controllers/firebaseAuthService.dart';
 import '../models/user.dart';
-import 'MyTextField.dart';
-import 'mainButton.dart';
+import '../nav/mainButton.dart';
+import '../nav/MyTextField.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key});

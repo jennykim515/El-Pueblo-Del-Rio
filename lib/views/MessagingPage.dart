@@ -1,7 +1,17 @@
 import 'package:flutter/material.dart';
 
-class MessagingPage extends StatelessWidget {
+import '../nav/navigationBar.dart';
+
+class MessagingPage extends StatefulWidget {
   const MessagingPage({Key? key}) : super(key: key);
+
+  @override
+  MessagePageState createState() => MessagePageState();
+
+}
+
+class MessagePageState extends State<MessagingPage>{
+  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +24,17 @@ class MessagingPage extends StatelessWidget {
           'Replace later with messaging page.',
           style: TextStyle(fontSize: 20.0),
         ),
+
       ),
+      bottomNavigationBar: ReusableBottomNavigationBar(
+        selectedIndex: _selectedIndex,
+      ),
+
     );
+
+
   }
+
 }
+
+
