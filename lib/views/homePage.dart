@@ -29,11 +29,15 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _fetchUserDetails() async {
     user = await _firebaseAuthService.fetchUserDetails();
-    setState(() {});
+    setState(() {
+
+    });
+
   }
 
   void signUserOut() {
     FirebaseAuth.instance.signOut();
+    print("signedOut");
   }
 
   void _onItemTapped(int index) {

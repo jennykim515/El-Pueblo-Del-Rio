@@ -203,9 +203,7 @@ class _RegisterPageState extends State<RegisterPage> {
       user = await _auth.signUpWithEmailAndPassword(
           email, password, name);
     }on FirebaseAuthException catch (e) {
-      print(e.code.toString());
-
-      print('$e');
+      print("this is my error code${e.code}");
       if (e.code.toString() == 'firebase_auth/weak-password') {
         print("weak password");
         setState(() {

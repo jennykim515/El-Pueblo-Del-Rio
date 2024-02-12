@@ -21,6 +21,84 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  void _login() async {
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    // show loading circle
+    showDialog(
+      context: context,
+      builder: (context) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(email:email, password: password);
+      // pop the loading circle
+      Navigator.pop(context);
+    } on FirebaseAuthException catch (e) {
+      print("exception hi");
+      print("$e");
+      // pop the loading circle
+      Navigator.pop(context);
+      // WRONG EMAIL
+      if (e.code == 'user-not-found') {
+        // show error to user
+        wrongEmailMessage();
+      }
+
+      // WRONG PASSWORD
+      else if (e.code == 'wrong-password') {
+        // show error to user
+        wrongPasswordMessage();
+      }
+      // WRONG PASSWORD
+      else if (e.code == 'invalid-credential') {
+        // show error to user
+        wrongPasswordMessage();
+      }
+    }
+  }
+
+  void wrongPasswordMessage() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Wrong Password'),
+      ),
+    );
+  }
+
+  void wrongEmailMessage() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Wrong Email'),
+      ),
+    );
+  }
+  void wrongCredential() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Wrong Crendential'),
+      ),
+    );
+  }
+
+
+
+    // AppUser? user = await _auth.signInWithEmailAndPassword(email, password);
+
+    // if (user != null) {
+    //   print("User is successfully logged in");
+    //   // navigate
+    //   Navigator.pushNamed(context, "/home");
+    // } else {
+    //   print("Some error happened in login");
+    // }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -150,18 +228,5 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _login() async {
-    String email = _emailController.text;
-    String password = _passwordController.text;
 
-    AppUser? user = await _auth.signInWithEmailAndPassword(email, password);
-
-    if (user != null) {
-      print("User is successfully logged in");
-      // navigate
-      Navigator.pushNamed(context, "/home");
-    } else {
-      print("Some error happened in login");
-    }
-  }
 }
