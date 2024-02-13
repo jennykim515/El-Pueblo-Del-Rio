@@ -4,7 +4,6 @@ import '../nav/navigationBar.dart';
 
 class ResourcesPage extends StatelessWidget {
   const ResourcesPage({Key? key}) : super(key: key);
-  final int _selectedIndex = 0;
 
 
   @override
@@ -20,12 +19,6 @@ class ResourcesPage extends StatelessWidget {
         ),
 
       ),
-      bottomNavigationBar: ReusableBottomNavigationBar(
-        selectedIndex: _selectedIndex,
-      ),
     );
   }
-}
-
-class _selectedIndex {
 }

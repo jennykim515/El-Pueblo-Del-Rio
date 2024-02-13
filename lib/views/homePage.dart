@@ -18,7 +18,6 @@ class _HomePageState extends State<HomePage> {
   final _firebaseAuthService = FirebaseAuthService();
   final _postController = PostController();
   AppUser? user;
-  int _selectedIndex = 0;
   String _searchQuery = ''; // current search query
 
   @override
@@ -38,12 +37,6 @@ class _HomePageState extends State<HomePage> {
   void signUserOut() {
     FirebaseAuth.instance.signOut();
     print("signedOut");
-  }
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
   }
 
   @override
@@ -104,9 +97,6 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: ReusableBottomNavigationBar(
-        selectedIndex: _selectedIndex,
       ),
     );
   }

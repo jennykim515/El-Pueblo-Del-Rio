@@ -11,7 +11,6 @@ class MessagingPage extends StatefulWidget {
 }
 
 class MessagePageState extends State<MessagingPage>{
-  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -24,10 +23,6 @@ class MessagePageState extends State<MessagingPage>{
           'Replace later with messaging page.',
           style: TextStyle(fontSize: 20.0),
         ),
-
-      ),
-      bottomNavigationBar: ReusableBottomNavigationBar(
-        selectedIndex: _selectedIndex,
 
       ),
 

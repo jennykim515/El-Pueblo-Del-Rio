@@ -1,60 +1,24 @@
 import 'package:flutter/material.dart';
 
-class ReusableBottomNavigationBar extends StatefulWidget {
+class ReusableBottomNavigationBar extends StatelessWidget {
+  final int selectedIndex;
+  final Function(int) onItemTapped;
 
-  ReusableBottomNavigationBar({super.key, required int selectedIndex});
-
-  @override
-  State<ReusableBottomNavigationBar> createState() => NavBarState();
-
-}
-
-class NavBarState extends State<ReusableBottomNavigationBar> {
-  int _selectedIndex = 0;
+  ReusableBottomNavigationBar({Key? key, required this.selectedIndex, required this.onItemTapped}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      currentIndex: _selectedIndex,
-      onTap: (index) {
-        setState(() {
-          _selectedIndex = index;
-          print(_selectedIndex);
-
-        });
-
-        // Define the routes for each item
-        List<String> routes = [
-          '/home',
-          '/messaging',
-          '/resources',
-        ];
-
-        // Navigate to the corresponding route
-        Navigator.pushReplacementNamed(context, routes[index]);
-        // Update the selectedIndex using setState
-      },
-      selectedItemColor: Colors.blueAccent,
-
-
-        items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.message),
-          label: 'Messaging',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.push_pin),
-          label: 'Resources',
-        ),
+      items: const <BottomNavigationBarItem>[
+        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+        BottomNavigationBarItem(icon: Badge(
+              label: Text('2'), // Show number of unread messages
+              child: Icon(Icons.messenger_sharp),
+            ), label: 'Messages'),
+        BottomNavigationBarItem(icon: Icon(Icons.folder), label: 'Resources'),
       ],
+      currentIndex: selectedIndex,
+      onTap: onItemTapped,
     );
   }
 }
-
-
-
-
