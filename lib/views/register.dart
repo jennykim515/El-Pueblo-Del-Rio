@@ -188,65 +188,72 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void _register() async {
-    AppUser? user;
+    String email = _emailController.text;
+    String password = _passwordController.text;
+    String name = _nameController.text;
+
+    // show loading circle
+    showDialog(
+      context: context,
+      builder: (context) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+
 
     try {
-      print("hello");
-      String email = _emailController.text;
-      String password = _passwordController.text;
-      String name = _nameController.text;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Yay! A SnackBar!'),
-        ),
-      );
-      user = await _auth.signUpWithEmailAndPassword(
-          email, password, name);
-    }on FirebaseAuthException catch (e) {
-      print("this is my error code${e.code}");
-      if (e.code.toString() == 'firebase_auth/weak-password') {
-        print("weak password");
-        setState(() {
-          passwordHintText = "Password is too weak";
-          TextStyle(
-            color: Colors.red,
-          );
-        });
-        // You can display an error message to the user
-      } else if (e.code == 'email-already-in-use') {
-        String errorMessage = e.toString();
-        print("yay snackbar time");
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Yay! A SnackBar!'),
-          ),
-        );
-        // Handle email already in use error
-        print('The account already exists for that email.');
-        // You can display an error message to the user
-      } else if (e.code == 'invalid-email') {
-        // Handle invalid email error
-        print('The email address is not valid.');
-        // You can display an error message to the user
-      } else {
-        // Handle other FirebaseAuthException errors
-        print('Error during sign-up: ${e.message}');
-        // You can display a generic error message to the user
-      }
+      await _auth.signUpWithEmailAndPassword(email, password, name);
+      Navigator.pop(context);
     }
+    // }on FirebaseAuthException catch (e) {
+    //   Navigator.pop(context);
+    //
+    //   if (e.code.toString() == 'weak-password') {
+    //     print("weak password");
+    //     setState(() {
+    //       passwordHintText = "Password is too weak";
+    //       TextStyle(
+    //         color: Colors.red,
+    //       );
+    //     });
+    //     // You can display an error message to the user
+    //   } else if (e.code == 'email-already-in-use') {
+    //     String errorMessage = e.toString();
+    //     print("yay snackbar time");
+    //     ScaffoldMessenger.of(context).showSnackBar(
+    //       SnackBar(
+    //         content: const Text('Yay! A SnackBar!'),
+    //       ),
+    //     );
+    //     // Handle email already in use error
+    //     print('The account already exists for that email.');
+    //     // You can display an error message to the user
+    //   } else if (e.code == 'invalid-email') {
+    //     // Handle invalid email error
+    //     print('The email address is not valid.');
+    //     // You can display an error message to the user
+    //   } else {
+    //     // Handle other FirebaseAuthException errors
+    //     print('Error during sign-up: ${e.message}');
+    //     // You can display a generic error message to the user
+    //   }
+    // }
      catch (e) {
       // Handle any other exceptions
+       print("hello");
       print('Unexpected error during sign-up: $e');
       // You can display a generic error message to the user
     }
 
-    if(user != null) {
-      print("User is successfully created");
-      // navigate
-      Navigator.pushNamed(context, "/home");
-    } else {
-      print("Some error happened in register");
-    }
+    // if(user != null) {
+    //   print("User is successfully created");
+    //   // navigate
+    //   Navigator.pushNamed(context, "/home");
+    // } else {
+    //   print("Some error happened in register");
+    // }
 
 
   }

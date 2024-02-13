@@ -40,8 +40,7 @@ class _LoginPageState extends State<LoginPage> {
       // pop the loading circle
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
-      print("exception hi");
-      print("$e");
+
       // pop the loading circle
       Navigator.pop(context);
       // WRONG EMAIL
@@ -85,18 +84,6 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-
-
-
-    // AppUser? user = await _auth.signInWithEmailAndPassword(email, password);
-
-    // if (user != null) {
-    //   print("User is successfully logged in");
-    //   // navigate
-    //   Navigator.pushNamed(context, "/home");
-    // } else {
-    //   print("Some error happened in login");
-    // }
 
 
   @override
