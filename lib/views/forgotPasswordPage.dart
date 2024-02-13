@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:pueblo_del_rio/views/login.dart';
 
 import '../nav/mainButton.dart';
 import '../nav/MyTextField.dart'; // Your custom text field widget
@@ -114,7 +115,8 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   ),
                   const SizedBox(height: 20),
                   MyButton(
-                    onTap: () => Navigator.pop(context), // Assuming you pushed ForgotPasswordPage onto the stack
+                    onTap: () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginPage()))
+, // Assuming you pushed ForgotPasswordPage onto the stack
                     buttonText: 'Return to Login', // Update as per your MyButton widget's parameters
                   ),
                   const SizedBox(height: 50),

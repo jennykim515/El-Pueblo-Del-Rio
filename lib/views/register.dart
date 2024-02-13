@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pueblo_del_rio/views/forgotPasswordPage.dart';
 
 import '../controllers/firebaseAuthService.dart';
 import '../models/user.dart';
@@ -88,9 +89,14 @@ class _RegisterPageState extends State<RegisterPage> {
                   const SizedBox(height: 10),
 
                   //forgot password?
-                  const Text(
-                    'Forgot Password?',
-                    style: TextStyle(color: Colors.white),
+                  TextButton(
+                    onPressed: () {
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const ForgotPasswordPage()));
+                    },
+                    child: const Text(
+                      'Forgot Password?',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
 
                   const SizedBox(height: 20),
