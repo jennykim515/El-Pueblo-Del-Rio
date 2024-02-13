@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pueblo_del_rio/views/mainScreen.dart';
 
 import 'homePage.dart';
 import 'login.dart';
@@ -22,7 +23,7 @@ class AuthPage extends StatelessWidget {
             );
           } else if (snapshot.hasData) {
             // User is logged in
-            return HomePage();
+            return MainScreen();
           } else {
             // User is NOT logged in
             return LoginPage();

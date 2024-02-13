@@ -30,11 +30,6 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const AuthPage(),
-      routes: {
-        '/home': (context) => const HomePage(),
-        '/messaging': (context) => const MessagingPage(),
-        '/resources': (context) => const ResourcesPage()
-      }
     );
   }
 }
