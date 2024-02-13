@@ -34,7 +34,7 @@ class PostController {
     try {
       QuerySnapshot querySnapshot = await _firestore
           .collection('posts')
-          .where('title', isEqualTo: query)
+          .where('title', isGreaterThanOrEqualTo: query, isLessThan: query + 'z')
           .get();
 
       List<Post> posts = querySnapshot.docs.map((doc) {
