@@ -7,7 +7,7 @@ class FirebaseAuthService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // sign up method
-  Future<AppUser?> signUpWithEmailAndPassword(String email, String password, String name) async {
+  Future<AppUser?> signUpWithEmailAndPassword(String email, String password, String name, String userType) async {
     try {
       UserCredential credential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
 
@@ -17,7 +17,7 @@ class FirebaseAuthService {
         'passwordHash': password, // WARNING: Storing passwords in plaintext is not recommended for production apps
         'name': name,
         'email': email,
-        'userType': 0, // Default user type (0: community member)
+        'userType': userType, // Default user type (0: community member)
         // Add other user information fields as needed
       });
 
