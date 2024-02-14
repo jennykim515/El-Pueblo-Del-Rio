@@ -5,6 +5,7 @@ import 'package:pueblo_del_rio/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pueblo_del_rio/models/post.dart';
 import '../nav/navigationBar.dart';
+import 'PostDetails.dart';
 import 'postWidget.dart'; // Import the PostWidget
 
 class HomePage extends StatefulWidget {
@@ -86,9 +87,20 @@ class _HomePageState extends State<HomePage> {
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {
                         Post post = snapshot.data![index];
-                        return PostWidget(post: post);
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PostDetails(post: post),
+                              ),
+                            );
+                          },
+                          child: PostWidget(post: post),
+                        );
                       },
-                    );
+                    )
+                  ;
                   } else {
                     return const Center(child: Text('No posts available.'));
                   }

@@ -20,6 +20,7 @@ class PostWidget extends StatelessWidget {
       child: ListTile(
         title: Text(post.title),
         subtitle: Text(bodyPreview),
+        trailing: const Icon(Icons.keyboard_arrow_right),
       ),
     );
   }
