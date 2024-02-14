@@ -36,7 +36,7 @@ class PostWidget extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'Author: ${post.author}',
+                    '@${post.author}',
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.black,
