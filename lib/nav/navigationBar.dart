@@ -9,6 +9,7 @@ class ReusableBottomNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
         BottomNavigationBarItem(icon: Badge(
@@ -16,6 +17,7 @@ class ReusableBottomNavigationBar extends StatelessWidget {
               child: Icon(Icons.messenger_sharp),
             ), label: 'Messages'),
         BottomNavigationBarItem(icon: Icon(Icons.folder), label: 'Resources'),
+        BottomNavigationBarItem(icon: Icon(Icons.person), label: 'My Profile'),
       ],
       currentIndex: selectedIndex,
       onTap: onItemTapped,

@@ -3,6 +3,7 @@ import 'package:pueblo_del_rio/nav/navigationBar.dart';
 import 'package:pueblo_del_rio/views/MessagingPage.dart';
 import 'package:pueblo_del_rio/views/ResourcesPage.dart';
 import 'package:pueblo_del_rio/views/homePage.dart';
+import 'package:pueblo_del_rio/views/userProfile.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -16,6 +17,7 @@ class _MainScreenState extends State<MainScreen> {
     const HomePage(),
     const MessagingPage(),
     const ResourcesPage(),
+    const UserProfileScreen(),
   ];
 
   @override
@@ -30,6 +32,7 @@ class _MainScreenState extends State<MainScreen> {
         onItemTapped: (index) {
           setState(() {
             _selectedIndex = index;
+            print(_selectedIndex);
           });
         },
       ),

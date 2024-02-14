@@ -18,6 +18,7 @@ class FirebaseAuthService {
         'name': name,
         'email': email,
         'userType': userType, // Default user type (0: community member)
+        'aboutMe': "Get to know me here",
         // Add other user information fields as needed
       });
 
@@ -27,14 +28,42 @@ class FirebaseAuthService {
         passwordHash: password,
         name: name,
         email: email,
-        userType: 0,
+        userType: userType
       );
     } catch(e) {
       print(e);
       return null;
     }
+
+  }
+//UPDATE USER DETAILS
+  Future<bool> updateUserDetails({String? name, String? email, int? userType, String? aboutMe,}) async {
+    try {
+      User? currentUser = _auth.currentUser;
+      if (currentUser != null) {
+        Map<String, dynamic> updatedData = {};
+        if (name != null) updatedData['name'] = name;
+        if (email != null) updatedData['email'] = email;
+        if (userType != null) updatedData['userType'] = userType;
+        if (aboutMe != null) updatedData['aboutMe'] = aboutMe;
+
+        if (updatedData.isNotEmpty) {
+          await _firestore.collection('users').doc(currentUser.uid).update(updatedData);
+        }
+
+        return true; // Return true indicating successful update
+      } else {
+        print('Current user is null');
+        return false; // Return false indicating failure to update
+      }
+    } catch (e) {
+      print('Error updating user details: $e');
+      return false; // Return false indicating failure to update
+    }
   }
 
+
+//FETCH USER DETAILS
   Future<AppUser?> fetchUserDetails() async {
     try {
       User? currentUser = FirebaseAuth.instance.currentUser;
