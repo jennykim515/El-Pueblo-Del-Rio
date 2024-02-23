@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:bcrypt/bcrypt.dart';
 import '../models/user.dart';
 
 class FirebaseAuthService {
@@ -9,34 +10,86 @@ class FirebaseAuthService {
   // sign up method
   Future<AppUser?> signUpWithEmailAndPassword(String email, String password, String name, String userType) async {
     try {
-      UserCredential credential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      // Hash the password
+      String passwordHash = await hashPassword(password);
 
-      // Create a user document in Firestore
+      UserCredential credential = await _auth.createUserWithEmailAndPassword(email: email, password: passwordHash);
+
+      // Create a user document in Firestore with hashed password
       await _firestore.collection('users').doc(credential.user!.uid).set({
         'username': email, // You can use email as username or create one separately
-        'passwordHash': password, // WARNING: Storing passwords in plaintext is not recommended for production apps
+        'passwordHash': passwordHash, // Store the hashed password
         'name': name,
         'email': email,
         'userType': userType, // Default user type (0: community member)
         'aboutMe': "Get to know me here",
-        // Add other user information fields as needed
       });
 
-      // Return an AppUser instance
       return AppUser(
-        username: email,
-        passwordHash: password,
-        name: name,
-        email: email,
-        userType: userType
+          username: email,
+          passwordHash: passwordHash,
+          name: name,
+          email: email,
+          userType: userType
       );
     } catch(e) {
       print(e);
       return null;
     }
-
   }
-//UPDATE USER DETAILS
+
+  // Hash password using bcrypt
+  Future<String> hashPassword(String password) async {
+    // Generate a salt and hash the password
+    final salt = BCrypt.gensalt();
+    final hash = BCrypt.hashpw(password, salt);
+
+    return hash;
+  }
+
+  // Sign in method
+  Future<AppUser?> signInWithEmailAndPassword(String email, String password) async {
+    try {
+      QuerySnapshot<Map<String, dynamic>> querySnapshot = await _firestore.collection('users').where('email', isEqualTo: email).get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        String userID = querySnapshot.docs.first.id;
+
+        DocumentSnapshot<Map<String, dynamic>> userSnapshot = await _firestore.collection('users').doc(userID).get();
+
+        if (userSnapshot.exists) {
+          String storedPasswordHash = userSnapshot.data()!['passwordHash'];
+          // String enteredPasswordHash = await hashPassword(password);
+
+          bool passwordMatches = BCrypt.checkpw(password, storedPasswordHash);
+
+          if (passwordMatches) {
+            await _auth.signInWithEmailAndPassword(
+              email: email,
+              password: storedPasswordHash,
+            );
+
+            return fetchUserDetails();
+          } else {
+            print('Incorrect password');
+            return null;
+          }
+        } else {
+          print('User document does not exist');
+          return null;
+        }
+      } else {
+        print('User document with the provided email does not exist');
+        return null;
+      }
+    } catch(e) {
+      print(e);
+      return null;
+    }
+  }
+
+
+  // UPDATE USER DETAILS
   Future<bool> updateUserDetails({String? name, String? email, int? userType, String? aboutMe,}) async {
     try {
       User? currentUser = _auth.currentUser;
@@ -61,8 +114,7 @@ class FirebaseAuthService {
     }
   }
 
-
-//FETCH USER DETAILS
+  // FETCH USER DETAILS
   Future<AppUser?> fetchUserDetails() async {
     try {
       User? currentUser = FirebaseAuth.instance.currentUser;
@@ -90,21 +142,5 @@ class FirebaseAuthService {
       print('Error fetching user details: $e');
       return null;
     }
-  }
-
-  // sign in method
-  Future<AppUser?> signInWithEmailAndPassword(String email, String password) async {
-    try {
-      // Sign in with email and password using FirebaseAuth
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-
-      return fetchUserDetails();
-    } catch(e) {
-      print(e);
-    }
-    return null;
   }
 }
