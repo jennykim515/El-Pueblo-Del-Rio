@@ -50,7 +50,6 @@ class _HomePageState extends State<HomePage> {
 
       backgroundColor: Colors.grey[300],
       appBar: AppBar(
-        backgroundColor: Colors.grey[900],
         actions: [
           IconButton(
             onPressed: signUserOut,
@@ -73,7 +72,7 @@ class _HomePageState extends State<HomePage> {
               user != null
                   ? Text(
                 'Hi, ${user!.name}',
-                style: const TextStyle(fontSize: 16),
+                style: const TextStyle(fontSize: 25),
               )
                   : const SizedBox(),
               const SizedBox(height: 20),
