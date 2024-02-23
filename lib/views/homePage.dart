@@ -46,6 +46,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
+
       backgroundColor: Colors.grey[300],
       appBar: AppBar(
         backgroundColor: Colors.grey[900],
@@ -56,61 +58,69 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            user != null
-                ? Text(
-              'Hi, ${user!.name}',
-              style: const TextStyle(fontSize: 16),
-            )
-                : const SizedBox(),
-            const SizedBox(height: 20),
-            _buildSearchBar(),
-            const SizedBox(height: 20),
-            const Text(
-              'Recent News',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            Expanded(
-              child: FutureBuilder<List<Post>>(
-                future: _searchQuery.isEmpty
-                    ? _postController.getAllPostsSortedByDate()
-                    : _postController.searchPosts(_searchQuery), // Use searchPosts if search query is not empty
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                    return ListView.builder(
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        Post post = snapshot.data![index];
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => PostDetails(post: post),
-                              ),
-                            );
-                          },
-                          child: PostWidget(post: post),
-                        );
-                      },
-                    )
-                  ;
-                  } else {
-                    return const Center(child: Text('No posts available.'));
-                  }
-                },
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("lib/assets/Background2.png"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              user != null
+                  ? Text(
+                'Hi, ${user!.name}',
+                style: const TextStyle(fontSize: 16),
+              )
+                  : const SizedBox(),
+              const SizedBox(height: 20),
+              _buildSearchBar(),
+              const SizedBox(height: 20),
+              const Text(
+                'Recent News',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-            ),
-          ],
+              const SizedBox(height: 10),
+              Expanded(
+                child: FutureBuilder<List<Post>>(
+                  future: _searchQuery.isEmpty
+                      ? _postController.getAllPostsSortedByDate()
+                      : _postController.searchPosts(_searchQuery), // Use searchPosts if search query is not empty
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                      return ListView.builder(
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          Post post = snapshot.data![index];
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => PostDetails(post: post),
+                                ),
+                              );
+                            },
+                            child: PostWidget(post: post),
+                          );
+                        },
+                      )
+                    ;
+                    } else {
+                      return const Center(child: Text('No posts available.'));
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

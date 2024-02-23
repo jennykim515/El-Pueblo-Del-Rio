@@ -50,7 +50,6 @@ class FirebaseAuthService {
         if (updatedData.isNotEmpty) {
           await _firestore.collection('users').doc(currentUser.uid).update(updatedData);
         }
-
         return true; // Return true indicating successful update
       } else {
         print('Current user is null');

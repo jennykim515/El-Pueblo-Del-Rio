@@ -12,12 +12,20 @@ class ResourcesPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Resources Page'),
       ),
-      body: const Center(
-        child: Text(
-          'Replace later with resources page.',
-          style: TextStyle(fontSize: 20.0),
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("lib/assets/Background2.png"),
+            fit: BoxFit.cover,
+          ),
         ),
+        child: const Center(
+          child: Text(
+            'Replace later with resources page.',
+            style: TextStyle(fontSize: 20.0),
+          ),
 
+        ),
       ),
     );
   }

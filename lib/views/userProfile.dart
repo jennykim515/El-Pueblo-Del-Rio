@@ -50,34 +50,41 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           ),
         ],
       ),
-      body: _user != null
-          ? Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CircleAvatar(
-              backgroundImage: NetworkImage("User Image"), // You need to replace this with the actual user image
-            ),
-            SizedBox(height: 20),
-            TextField(
-              controller: _nameController,
-              decoration: InputDecoration(labelText: 'Name'),
-            ),
-            SizedBox(height: 10),
-            TextField(
-              controller: _emailController,
-              decoration: InputDecoration(labelText: 'Email'),
-            ),
-            TextField(
-              controller: _bioController,
-              decoration: InputDecoration(labelText: 'About me'),
-            ),
-          ],
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("lib/assets/Background2.png"),
+            fit: BoxFit.cover,
+          ),
         ),
-      )
-          : Center(
-        child: CircularProgressIndicator(),
+        child: _user != null ? Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CircleAvatar(
+                backgroundImage: NetworkImage("User Image"), // You need to replace this with the actual user image
+              ),
+              SizedBox(height: 20),
+              TextField(
+                controller: _nameController,
+                decoration: InputDecoration(labelText: 'Name'),
+              ),
+              SizedBox(height: 10),
+              TextField(
+                controller: _emailController,
+                decoration: InputDecoration(labelText: 'Email'),
+              ),
+              TextField(
+                controller: _bioController,
+                decoration: InputDecoration(labelText: 'About me'),
+              ),
+            ],
+          ),
+        )
+            : Center(
+          child: CircularProgressIndicator(),
+        ),
       ),
     );
   }
