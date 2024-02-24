@@ -20,6 +20,9 @@ class PostController {
           title: doc['title'],
           body: doc['body'],
           date: dateTime,
+          commentsCount: doc['commentsCount'] ?? 0,
+          likesCount: doc['likesCount'] ?? 0,
+          imageUrl: doc['imageUrl'] ?? '',
         );
       }).toList();
 
@@ -49,7 +52,20 @@ class PostController {
     }
   }
 
-
-
-
+  Future<void> createNewPost(String title, String body, String author) async {
+    try {
+      await _firestore.collection('posts').add({
+        'title': title,
+        'body': body,
+        'author': author,
+        'commentsCount': 0,
+        'likesCount': 0,
+        'imageUrl': "https://picsum.photos/id/1004/960/540", // default
+        'date': Timestamp.now(),
+      });
+    } catch (e) {
+      print('Error creating post: $e');
+      throw e;
+    }
+  }
 }

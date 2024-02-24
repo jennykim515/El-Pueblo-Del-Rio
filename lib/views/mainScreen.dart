@@ -3,6 +3,7 @@ import 'package:pueblo_del_rio/nav/navigationBar.dart';
 import 'package:pueblo_del_rio/views/MessagingPage.dart';
 import 'package:pueblo_del_rio/views/ResourcesPage.dart';
 import 'package:pueblo_del_rio/views/homePage.dart';
+import 'package:pueblo_del_rio/views/userProfile.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -10,13 +11,13 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _selectedIndex = 0; // Manage the index here, if needed
+  int _selectedIndex = 0; 
 
-  // Your pages
   final List<Widget> _pages = [
     const HomePage(),
     const MessagingPage(),
     const ResourcesPage(),
+    const UserProfileScreen(),
   ];
 
   @override

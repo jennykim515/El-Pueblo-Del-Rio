@@ -39,6 +39,8 @@ dependencies:
   firebase_auth: any
   shared_preferences: any
   cloud_firestore: any
+  intl: any
+  bcrypt: any
 
 dev_dependencies:
   flutter_test:

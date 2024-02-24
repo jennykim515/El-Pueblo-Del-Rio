@@ -4,7 +4,10 @@ import 'package:pueblo_del_rio/controllers/postController.dart';
 import 'package:pueblo_del_rio/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pueblo_del_rio/models/post.dart';
+import 'package:pueblo_del_rio/views/login.dart';
 import '../nav/navigationBar.dart';
+import 'CreatePost.dart';
+import 'PostDetails.dart';
 import 'postWidget.dart'; // Import the PostWidget
 
 class HomePage extends StatefulWidget {
@@ -28,10 +31,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _fetchUserDetails() async {
     user = await _firebaseAuthService.fetchUserDetails();
-    setState(() {
-
-    });
-
+    setState(() {});
   }
 
   void signUserOut() {
@@ -52,50 +52,73 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            user != null
-                ? Text(
-              'Hi, ${user!.name}',
-              style: const TextStyle(fontSize: 16),
-            )
-                : const SizedBox(),
-            const SizedBox(height: 20),
-            _buildSearchBar(),
-            const SizedBox(height: 20),
-            const Text(
-              'Recent News',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            Expanded(
-              child: FutureBuilder<List<Post>>(
-                future: _searchQuery.isEmpty
-                    ? _postController.getAllPostsSortedByDate()
-                    : _postController.searchPosts(_searchQuery), // Use searchPosts if search query is not empty
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                    return ListView.builder(
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        Post post = snapshot.data![index];
-                        return PostWidget(post: post);
-                      },
-                    );
-                  } else {
-                    return const Center(child: Text('No posts available.'));
-                  }
-                },
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("lib/assets/Background2.png"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  user != null
+                      ? Text(
+                    'Hi, ${user!.name}',
+                    style: const TextStyle(fontSize: 16),
+                  )
+                      : const SizedBox(),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Navigate to new post creation page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const CreatePost()),
+                      );
+                    },
+                    child: Icon(Icons.add),
+                  ),
+                ],
               ),
-            ),
-          ],
+              const SizedBox(height: 20),
+              _buildSearchBar(),
+              const SizedBox(height: 20),
+              const Text(
+                'Recent News',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              Expanded(
+                child: FutureBuilder<List<Post>>(
+                  future: _searchQuery.isEmpty
+                      ? _postController.getAllPostsSortedByDate()
+                      : _postController.searchPosts(_searchQuery),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                      return ListView.builder(
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          Post post = snapshot.data![index];
+                          return PostWidget(post: post);
+                        },
+                      );
+                    } else {
+                      return const Center(child: Text('No posts available.'));
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -105,7 +128,7 @@ class _HomePageState extends State<HomePage> {
     return TextField(
       onChanged: (value) {
         setState(() {
-          _searchQuery = value; // search query updated when text changes
+          _searchQuery = value;
         });
       },
       decoration: const InputDecoration(

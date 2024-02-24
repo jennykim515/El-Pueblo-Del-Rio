@@ -5,14 +5,20 @@ class Post {
   final String author;
   final String title;
   final String body;
+  final int commentsCount;
+  final int likesCount;
   final DateTime? date;
+  final String? imageUrl;
 
   Post({
     required this.id,
     required this.author,
     required this.title,
     required this.body,
+    required this.commentsCount,
+    required this.likesCount,
     this.date,
+    this.imageUrl
   });
 
   factory Post.fromFirestore(DocumentSnapshot doc) {
@@ -22,7 +28,10 @@ class Post {
       title: data['title'] ?? '',
       body: data['body'] ?? '',
       author: '',
-      date: null,
+      commentsCount: data['commentsCount'] ?? 0,
+      likesCount: data['likesCount'] ?? 0,
+      date: data['date']?.toDate(),
+      imageUrl: data['imageUrl'] ?? '',
     );
   }
 }

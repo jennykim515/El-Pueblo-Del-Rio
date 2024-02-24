@@ -3,7 +3,8 @@ class AppUser {
   String? passwordHash;
   String? name;
   String? email;
-  int? userType; // 0: community member, 1: police officer
+  String? userBio;
+  String? userType; // 0: community member, 1: police officer
 
   AppUser({
     this.username,
@@ -11,6 +12,7 @@ class AppUser {
     this.name,
     this.email,
     this.userType,
+    this.userBio,
   });
 
   // Factory constructor to create a User instance from a map
@@ -21,6 +23,7 @@ class AppUser {
       name: json['name'],
       email: json['email'],
       userType: json['userType'],
+      userBio: json['userBio'],
     );
   }
 
@@ -32,6 +35,8 @@ class AppUser {
       'name': name,
       'email': email,
       'userType': userType,
+      'userBio' : userBio,
     };
   }
 }
+

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pueblo_del_rio/views/UserTypeDropdown.dart';
 import 'package:pueblo_del_rio/views/forgotPasswordPage.dart';
 
 import '../controllers/firebaseAuthService.dart';
@@ -22,6 +23,8 @@ class _RegisterPageState extends State<RegisterPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _nameController = TextEditingController();
+  String userType = "Resident";
+
   String passwordHintText = "Password";
 
   @override
@@ -85,6 +88,12 @@ class _RegisterPageState extends State<RegisterPage> {
                     hintText: passwordHintText,
                     obscureText: true,
                   ),
+
+                  const SizedBox(height: 10),
+
+                  UserTypeDropdown(onSelect: (newValue) {
+                    userType = newValue!;
+                  },),
 
                   const SizedBox(height: 10),
 
@@ -210,8 +219,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
 
     try {
-      await _auth.signUpWithEmailAndPassword(email, password, name);
-      Navigator.pop(context);
+      await _auth.signUpWithEmailAndPassword(email, password, name, userType);
+      Navigator.pop(context); // sometimes causes issues
     }
     // }on FirebaseAuthException catch (e) {
     //   Navigator.pop(context);
@@ -264,4 +273,3 @@ class _RegisterPageState extends State<RegisterPage> {
 
   }
 }
-

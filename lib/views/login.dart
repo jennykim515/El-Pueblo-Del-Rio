@@ -4,7 +4,6 @@ import 'package:pueblo_del_rio/views/forgotPasswordPage.dart';
 import 'package:pueblo_del_rio/views/register.dart';
 
 import '../controllers/firebaseAuthService.dart';
-import '../models/user.dart';
 import '../nav/mainButton.dart';
 import '../nav/MyTextField.dart';
 
@@ -37,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(email:email, password: password);
+      _auth.signInWithEmailAndPassword(email, password);
       // pop the loading circle
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
@@ -85,8 +84,6 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -215,6 +212,4 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-
-
 }
