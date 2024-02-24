@@ -108,17 +108,7 @@ class _HomePageState extends State<HomePage> {
                         itemCount: snapshot.data!.length,
                         itemBuilder: (context, index) {
                           Post post = snapshot.data![index];
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => PostDetails(post: post),
-                                ),
-                              );
-                            },
-                            child: PostWidget(post: post),
-                          );
+                          return PostWidget(post: post);
                         },
                       );
                     } else {

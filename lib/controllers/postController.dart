@@ -20,6 +20,9 @@ class PostController {
           title: doc['title'],
           body: doc['body'],
           date: dateTime,
+          commentsCount: doc['commentsCount'] ?? 0,
+          likesCount: doc['likesCount'] ?? 0,
+          imageUrl: doc['imageUrl'] ?? '',
         );
       }).toList();
 
