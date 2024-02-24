@@ -48,4 +48,18 @@ class PostController {
       return [];
     }
   }
+
+  Future<void> createNewPost(String title, String body, String author) async {
+    try {
+      await _firestore.collection('posts').add({
+        'title': title,
+        'body': body,
+        'author': author,
+        'date': Timestamp.now(),
+      });
+    } catch (e) {
+      print('Error creating post: $e');
+      throw e;
+    }
+  }
 }

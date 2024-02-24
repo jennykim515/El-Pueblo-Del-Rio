@@ -7,6 +7,7 @@ import 'package:pueblo_del_rio/views/authPage.dart';
 import 'package:pueblo_del_rio/views/homePage.dart';
 import 'package:pueblo_del_rio/views/login.dart';
 import 'package:pueblo_del_rio/views/splash.dart';
+import 'package:pueblo_del_rio/controllers/firebaseAuthService.dart';
 import 'firebase_options.dart';
 
 void main() async {

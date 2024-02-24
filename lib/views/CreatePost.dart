@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import '../models/user.dart';
+import 'package:pueblo_del_rio/controllers/firebaseAuthService.dart';
+import 'package:pueblo_del_rio/controllers/postController.dart'; // Import the PostController
 
 class CreatePost extends StatefulWidget {
   const CreatePost({Key? key}) : super(key: key);
@@ -8,6 +11,23 @@ class CreatePost extends StatefulWidget {
 }
 
 class _CreatePostState extends State<CreatePost> {
+  final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
+  final PostController _postController = PostController(); // Declare postController as an instance variable
+  AppUser? user;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserDetails();
+  }
+
+  Future<void> _fetchUserDetails() async {
+    AppUser? userDetails = await _firebaseAuthService.fetchUserDetails();
+    setState(() {
+      user = userDetails;
+    });
+  }
+
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _bodyController = TextEditingController();
 
@@ -60,18 +80,50 @@ class _CreatePostState extends State<CreatePost> {
     );
   }
 
-  void _createPost() {
-    // Fetch the title and body text from the controllers
+  void _createPost() async {
     final String title = _titleController.text;
     final String body = _bodyController.text;
 
-    // Do something with the title and body, such as saving them to a database
-    // For now, print them
+    // Check if the title is empty
+    if (title.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Please enter a title.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+      return; // Exit the method without creating the post
+    }
+
     print('Title: $title');
     print('Body: $body');
+    if (user != null) {
+      print('Author: ${user!.username}');
+      try {
+        await _postController.createNewPost(title, body, user!.username!);
+        print('Post created successfully');
 
-    // Clear the input fields after posting
-    _titleController.clear();
-    _bodyController.clear();
+        // Clear the input fields after posting and trigger a rebuild
+        setState(() {
+          _titleController.clear();
+          _bodyController.clear();
+        });
+      } catch (e) {
+        print('Error creating post: $e');
+        // Handle error
+      }
+    }
   }
+
 }
