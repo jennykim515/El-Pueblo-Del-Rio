@@ -55,6 +55,8 @@ class PostController {
         'title': title,
         'body': body,
         'author': author,
+        'commentsCount': 0,
+        'likesCount': 0,
         'date': Timestamp.now(),
       });
     } catch (e) {
