@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // Import the intl package
 import 'package:pueblo_del_rio/models/post.dart';
@@ -9,61 +10,133 @@ class PostWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String bodyPreview = post.body.length > 250 ? '${post.body.substring(0, 250)}...' : post.body;
-
-    // Format the date and time
-    String formattedDate = post.date != null ? DateFormat('MMMM dd, yyyy hh:mm a').format(post.date!) : 'N/A';
-
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey), // border
-      ),
-      child: SizedBox(
-        width: double.infinity, // full width
-        child: ListTile(
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    String bodyPreview = post.body.length > 150 ? '${post.body.substring(0, 150)}...' : post.body;
+    return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _AvatarImage("https://picsum.photos/id/1072/80/80"),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    '$formattedDate', // Use the formatted date
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black,
-                    ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                          child: RichText(
+                        overflow: TextOverflow.ellipsis,
+                        text: TextSpan(children: [
+                          TextSpan(
+                            text: post.author,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: Colors.black),
+                          ),
+                          TextSpan(
+                            text: " Resident",
+                            style:
+                                Theme.of(context).textTheme.subtitle1,
+                          ),
+                        ]),
+                      )),
+                      Text('· 5m',
+                          style: Theme.of(context).textTheme.subtitle1),
+                      const Padding(
+                        padding: EdgeInsets.only(left: 8.0),
+                        child: Icon(Icons.more_horiz),
+                      )
+                    ],
                   ),
-                  Text(
-                    '@${post.author}',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black,
+                  if (post.body != null) Text(post.body!),
+                  if (post.imageUrl != null)
+                    Container(
+                      height: 200,
+                      margin: const EdgeInsets.only(top: 8.0),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.0),
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: NetworkImage(post.imageUrl!),
+                          )),
                     ),
-                  ),
+                  _ActionsRow(item: post)
                 ],
               ),
-              SizedBox(height: 8),
-              Text(
-                post.title,
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.blue,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 8),
-              Text(
-                bodyPreview,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black,
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
+      );
+
+    // return Container(
+    //   decoration: BoxDecoration(
+    //     border: Border.all(color: Colors.grey),
+    //     borderRadius: BorderRadius.circular(8.0),
+    //   ),
+    //   padding: const EdgeInsets.all(8.0),
+    //   margin: const EdgeInsets.symmetric(vertical: 8.0),
+    //   child: ListTile(
+    //     title: Text(post.title),
+    //     subtitle: Text(bodyPreview),
+    //     trailing: const Icon(Icons.keyboard_arrow_right),
+    //   ),
+    // );
+  }
+}
+
+class _AvatarImage extends StatelessWidget {
+  final String url;
+  const _AvatarImage(this.url, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 60,
+      height: 60,
+      decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          image: DecorationImage(image: NetworkImage(url))),
+    );
+  }
+}
+
+class _ActionsRow extends StatelessWidget {
+  final Post item;
+  const _ActionsRow({Key? key, required this.item}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Theme(
+      data: Theme.of(context).copyWith(
+          iconTheme: const IconThemeData(color: Colors.grey, size: 18),
+          textButtonTheme: TextButtonThemeData(
+              style: ButtonStyle(
+            foregroundColor: MaterialStateProperty.all(Colors.grey),
+          ))),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          TextButton.icon(
+            onPressed: () {},
+            icon: const Icon(Icons.mode_comment_outlined),
+            label: Text(
+                item.commentsCount == 0 ? '' : item.commentsCount.toString()),
+          ),
+          TextButton.icon(
+            onPressed: () {},
+            icon: const Icon(Icons.favorite_border),
+            label: Text(item.likesCount == 0 ? '' : item.likesCount.toString()),
+          ),
+          IconButton(
+            icon: const Icon(CupertinoIcons.share_up),
+            onPressed: () {},
+          )
+        ],
       ),
     );
   }
