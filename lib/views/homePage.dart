@@ -4,7 +4,9 @@ import 'package:pueblo_del_rio/controllers/postController.dart';
 import 'package:pueblo_del_rio/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pueblo_del_rio/models/post.dart';
+import 'package:pueblo_del_rio/views/login.dart';
 import '../nav/navigationBar.dart';
+import 'CreatePost.dart';
 import 'PostDetails.dart';
 import 'postWidget.dart'; // Import the PostWidget
 
@@ -29,10 +31,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _fetchUserDetails() async {
     user = await _firebaseAuthService.fetchUserDetails();
-    setState(() {
-
-    });
-
+    setState(() {});
   }
 
   void signUserOut() {
@@ -40,14 +39,9 @@ class _HomePageState extends State<HomePage> {
     print("signedOut");
   }
 
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-
       backgroundColor: Colors.grey[300],
       appBar: AppBar(
         backgroundColor: Colors.grey[900],
@@ -70,12 +64,27 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              user != null
-                  ? Text(
-                'Hi, ${user!.name}',
-                style: const TextStyle(fontSize: 16),
-              )
-                  : const SizedBox(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  user != null
+                      ? Text(
+                    'Hi, ${user!.name}',
+                    style: const TextStyle(fontSize: 16),
+                  )
+                      : const SizedBox(),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Navigate to new post creation page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const CreatePost()),
+                      );
+                    },
+                    child: Icon(Icons.add),
+                  ),
+                ],
+              ),
               const SizedBox(height: 20),
               _buildSearchBar(),
               const SizedBox(height: 20),
@@ -88,7 +97,7 @@ class _HomePageState extends State<HomePage> {
                 child: FutureBuilder<List<Post>>(
                   future: _searchQuery.isEmpty
                       ? _postController.getAllPostsSortedByDate()
-                      : _postController.searchPosts(_searchQuery), // Use searchPosts if search query is not empty
+                      : _postController.searchPosts(_searchQuery),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(child: CircularProgressIndicator());
@@ -111,8 +120,7 @@ class _HomePageState extends State<HomePage> {
                             child: PostWidget(post: post),
                           );
                         },
-                      )
-                    ;
+                      );
                     } else {
                       return const Center(child: Text('No posts available.'));
                     }
@@ -130,7 +138,7 @@ class _HomePageState extends State<HomePage> {
     return TextField(
       onChanged: (value) {
         setState(() {
-          _searchQuery = value; // search query updated when text changes
+          _searchQuery = value;
         });
       },
       decoration: const InputDecoration(

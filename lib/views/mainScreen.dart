@@ -32,7 +32,6 @@ class _MainScreenState extends State<MainScreen> {
         onItemTapped: (index) {
           setState(() {
             _selectedIndex = index;
-            print(_selectedIndex);
           });
         },
       ),
