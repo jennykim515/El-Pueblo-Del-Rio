@@ -60,6 +60,7 @@ class PostController {
         'author': author,
         'commentsCount': 0,
         'likesCount': 0,
+        'imageUrl': "https://picsum.photos/id/1004/960/540", // default
         'date': Timestamp.now(),
       });
     } catch (e) {
