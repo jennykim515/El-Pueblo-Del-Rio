@@ -106,6 +106,28 @@ class _CreatePostState extends State<CreatePost> {
       return; // Exit the method without creating the post
     }
 
+    // Check if the body is empty
+    if (body.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Please enter a body for your post.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+      return; // Exit the method without creating the post
+    }
+
     print('Title: $title');
     print('Body: $body');
     if (user != null) {
