@@ -27,7 +27,7 @@ class Post {
       id: doc.id,
       title: data['title'] ?? '',
       body: data['body'] ?? '',
-      author: '',
+      author: data['author'] ?? '',
       commentsCount: data['commentsCount'] ?? 0,
       likesCount: data['likesCount'] ?? 0,
       date: data['date']?.toDate(),
