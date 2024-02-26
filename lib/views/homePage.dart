@@ -9,6 +9,7 @@ import '../nav/navigationBar.dart';
 import 'CreatePost.dart';
 import 'PostDetails.dart';
 import 'postWidget.dart'; // Import the PostWidget
+import 'package:google_fonts/google_fonts.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -42,23 +43,15 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
-      appBar: AppBar(
-        backgroundColor: Colors.grey[900],
-        actions: [
-          IconButton(
-            onPressed: signUserOut,
-            icon: const Icon(Icons.logout),
-          )
-        ],
-      ),
+      backgroundColor: Colors.grey[200],
+
       body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("lib/assets/Background2.png"),
-            fit: BoxFit.cover,
-          ),
-        ),
+        // decoration: const BoxDecoration(
+        //   image: DecorationImage(
+        //     image: AssetImage("lib/assets/Background2.png"),
+        //     fit: BoxFit.cover,
+        //   ),
+        // ),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -67,12 +60,19 @@ class _HomePageState extends State<HomePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  IconButton(
+                    onPressed: signUserOut,
+                    icon: const Icon(Icons.logout),
+                  ),
                   user != null
                       ? Text(
                     'Hi, ${user!.name}',
-                    style: const TextStyle(fontSize: 16),
+                    style: Theme.of(context).textTheme.titleLarge,
                   )
                       : const SizedBox(),
+
+
+
                   ElevatedButton(
                     onPressed: () {
                       // Navigate to new post creation page
@@ -81,16 +81,17 @@ class _HomePageState extends State<HomePage> {
                         MaterialPageRoute(builder: (context) => const CreatePost()),
                       );
                     },
-                    child: Icon(Icons.add),
+                    child: Text("Add a Post +"),
+
                   ),
                 ],
               ),
               const SizedBox(height: 20),
               _buildSearchBar(),
               const SizedBox(height: 20),
-              const Text(
+              Text(
                 'Recent News',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(height: 10),
               Expanded(
@@ -108,7 +109,12 @@ class _HomePageState extends State<HomePage> {
                         itemCount: snapshot.data!.length,
                         itemBuilder: (context, index) {
                           Post post = snapshot.data![index];
-                          return PostWidget(post: post);
+                          return Column(
+                            children: [
+                              PostWidget(post: post),
+                              SizedBox(height: 20), // Adjust the height as needed
+                            ],
+                          );
                         },
                       );
                     } else {
@@ -131,10 +137,17 @@ class _HomePageState extends State<HomePage> {
           _searchQuery = value;
         });
       },
-      decoration: const InputDecoration(
+      decoration: InputDecoration(
         hintText: 'Search...',
         prefixIcon: Icon(Icons.search),
-        border: OutlineInputBorder(),
+        prefixIconColor: Colors.grey,
+        fillColor: Colors.white,
+        filled: true,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(50.0),
+          borderSide: BorderSide.none,
+        ),
+
       ),
     );
   }

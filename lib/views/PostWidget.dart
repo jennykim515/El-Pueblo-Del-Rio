@@ -12,7 +12,14 @@ class PostWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     String bodyPreview = post.body.length > 150 ? '${post.body.substring(0, 150)}...' : post.body;
     return Padding(
-        padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 50.0),
+      child: Container(
+        padding: const EdgeInsets.all(15.0),
+
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15.0),
+          color:Colors.grey[100] ,
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,12 +48,12 @@ class PostWidget extends StatelessWidget {
                           TextSpan(
                             text: " Resident",
                             style:
-                                Theme.of(context).textTheme.subtitle1,
+                                Theme.of(context).textTheme.bodyLarge,
                           ),
                         ]),
                       )),
                       Text('· 5m',
-                          style: Theme.of(context).textTheme.subtitle1),
+                          style: Theme.of(context).textTheme.bodyLarge),
                       const Padding(
                         padding: EdgeInsets.only(left: 8.0),
                         child: Icon(Icons.more_horiz),
@@ -71,7 +78,9 @@ class PostWidget extends StatelessWidget {
             ),
           ],
         ),
-      );
+
+      ),
+    );
 
     // return Container(
     //   decoration: BoxDecoration(

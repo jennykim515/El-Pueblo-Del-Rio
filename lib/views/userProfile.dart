@@ -60,7 +60,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         child: _user != null ? Padding(
           padding: EdgeInsets.all(16.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               CircleAvatar(
                 backgroundImage: NetworkImage("User Image"), // You need to replace this with the actual user image
@@ -79,6 +79,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 controller: _bioController,
                 decoration: InputDecoration(labelText: 'About me'),
               ),
+              SizedBox(height: 50,),
+
+              ElevatedButton(
+                  onPressed: (){_saveChanges();}, child: Text("Save Changes"))
             ],
           ),
         )

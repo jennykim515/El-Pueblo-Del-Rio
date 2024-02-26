@@ -141,6 +141,9 @@ class _CreatePostState extends State<CreatePost> {
           _titleController.clear();
           _bodyController.clear();
         });
+
+        //navigate to home screen to show the post
+
       } catch (e) {
         print('Error creating post: $e');
         // Handle error
