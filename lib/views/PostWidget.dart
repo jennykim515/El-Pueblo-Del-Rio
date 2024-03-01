@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // Import the intl package
 import 'package:pueblo_del_rio/models/post.dart';
+import 'package:pueblo_del_rio/models/user.dart';
 
 import '../nav/likeButton.dart';
 
@@ -12,15 +13,13 @@ class PostWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String bodyPreview = post.body.length > 150 ? '${post.body.substring(0, 150)}...' : post.body;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 50.0),
       child: Container(
         padding: const EdgeInsets.all(15.0),
-
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15.0),
-          color:Colors.grey[100] ,
+          color: Colors.grey[100],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -33,34 +32,45 @@ class PostWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                          child: RichText(
-                        overflow: TextOverflow.ellipsis,
-                        text: TextSpan(children: [
-                          TextSpan(
-                            text: post.author,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: Colors.black),
-                          ),
-                          TextSpan(
-                            text: " Resident",
-                            style:
-                                Theme.of(context).textTheme.bodyLarge,
-                          ),
-                        ]),
-                      )),
-                      Text(post.getDateAsString(),
-                          style: Theme.of(context).textTheme.bodyLarge),
-                      const Padding(
-                        padding: EdgeInsets.only(left: 8.0),
-                        child: Icon(Icons.more_horiz),
-                      )
-                    ],
+                  FutureBuilder<AppUser>(
+                    future: post.getAuthor(), // Corrected to call getAuthor without passing authorRef
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text("Error fetching author details");
+                      } else if (snapshot.hasData) {
+                        return Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: RichText(
+                                overflow: TextOverflow.ellipsis,
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: snapshot.data!.name ?? "Unknown", // Display the author's name
+                                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black),
+                                    ),
+                                    TextSpan(
+                                      text: " ${snapshot.data!.userType}", // Display the author's user type
+                                      style: Theme.of(context).textTheme.bodyLarge,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Text('· 5m', style: Theme.of(context).textTheme.bodyLarge),
+                            const Padding(
+                              padding: EdgeInsets.only(left: 8.0),
+                              child: Icon(Icons.more_horiz),
+                            )
+                          ],
+                        );
+                      } else {
+                        return Text("Author not found");
+                      }
+                    },
                   ),
                   if (post.body != null) Text(post.body!),
                   if (post.imageUrl != null)
@@ -68,37 +78,24 @@ class PostWidget extends StatelessWidget {
                       height: 200,
                       margin: const EdgeInsets.only(top: 8.0),
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8.0),
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: NetworkImage(post.imageUrl!),
-                          )),
+                        borderRadius: BorderRadius.circular(8.0),
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: NetworkImage(post.imageUrl!),
+                        ),
+                      ),
                     ),
-                  _ActionsRow(item: post)
+                  _ActionsRow(item: post),
                 ],
               ),
             ),
           ],
         ),
-
       ),
     );
-
-    // return Container(
-    //   decoration: BoxDecoration(
-    //     border: Border.all(color: Colors.grey),
-    //     borderRadius: BorderRadius.circular(8.0),
-    //   ),
-    //   padding: const EdgeInsets.all(8.0),
-    //   margin: const EdgeInsets.symmetric(vertical: 8.0),
-    //   child: ListTile(
-    //     title: Text(post.title),
-    //     subtitle: Text(bodyPreview),
-    //     trailing: const Icon(Icons.keyboard_arrow_right),
-    //   ),
-    // );
   }
 }
+
 
 class _AvatarImage extends StatelessWidget {
   final String url;
