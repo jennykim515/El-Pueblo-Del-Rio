@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // Import the services library for Clipboard
 
 import '../nav/navigationBar.dart';
 
 class ResourcesPage extends StatelessWidget {
   const ResourcesPage({Key? key}) : super(key: key);
-
 
   @override
   Widget build(BuildContext context) {
@@ -19,13 +19,40 @@ class ResourcesPage extends StatelessWidget {
             fit: BoxFit.cover,
           ),
         ),
-        child: const Center(
-          child: Text(
-            'Replace later with resources page.',
-            style: TextStyle(fontSize: 20.0),
-          ),
-
+        child: ListView(
+          padding: const EdgeInsets.all(16.0),
+          children: [
+            Card(
+              child: ListTile(
+                title: const Text('Resource 1'),
+                subtitle: const Text('Link of Resource 1. Click to Copy'),
+                onTap: () {
+                  _copyToClipboard('Link of Resource 2. Click to Copy', context);
+                },
+              ),
+            ),
+            Card(
+              child: ListTile(
+                title: const Text('Resource 2'),
+                subtitle: const Text('Link of Resource 2. Click to Copy'),
+                onTap: () {
+                  _copyToClipboard('Link of Resource 2. Click to Copy', context);
+                },
+              ),
+            ),
+            // Add more Card widgets for additional resources
+          ],
         ),
+      ),
+    );
+  }
+
+  void _copyToClipboard(String text, BuildContext context) {
+    Clipboard.setData(ClipboardData(text: text));
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Copied link to clipboard'),
+        duration: Duration(seconds: 1),
       ),
     );
   }
