@@ -6,30 +6,12 @@ class PostController {
 
   Future<List<Post>> getAllPostsSortedByDate() async {
     try {
-      QuerySnapshot<Map<String, dynamic>> snapshot = await _firestore
-          .collection('posts')
-          .orderBy('date', descending: true)
-          .get();
-
-      List<Post> posts = snapshot.docs.map((doc) {
-        Timestamp timestamp = doc['date'];
-        DateTime dateTime = timestamp.toDate(); // convert to DateTime
-        return Post(
-          id: doc.id,
-          author: doc['author'],
-          title: doc['title'],
-          body: doc['body'],
-          date: dateTime,
-          commentsCount: doc['commentsCount'] ?? 0,
-          likesCount: doc['likesCount'] ?? 0,
-          imageUrl: doc['imageUrl'] ?? '',
-        );
-      }).toList();
-
+      QuerySnapshot<Map<String, dynamic>> snapshot = await _firestore.collection('posts').orderBy('date', descending: true).get();
+      List<Post> posts = snapshot.docs.map((doc) => Post.fromFirestore(doc)).toList();
       return posts;
     } catch (e) {
       print('Error fetching posts: $e');
-      return []; // Return an empty list if an error occurs
+      return [];
     }
   }
 
@@ -39,29 +21,27 @@ class PostController {
           .collection('posts')
           .where('title', isGreaterThanOrEqualTo: query, isLessThan: query + 'z')
           .get();
-
-      List<Post> posts = querySnapshot.docs.map((doc) {
-        return Post.fromFirestore(doc);
-      }).toList();
-
+      List<Post> posts = querySnapshot.docs.map((doc) => Post.fromFirestore(doc)).toList();
       return posts;
     } catch (e) {
       print('Error searching posts: $e');
-      // Return an empty list if there's an error
       return [];
     }
   }
 
-  Future<void> createNewPost(String title, String body, String author) async {
+  Future<void> createNewPost(String title, String body, String userId) async {
     try {
+      // Directly use the UID to create a reference to the user's document in the 'users' collection
+      DocumentReference userRef = FirebaseFirestore.instance.collection('users').doc(userId);
+
       await _firestore.collection('posts').add({
         'title': title,
         'body': body,
-        'author': author,
+        'authorRef': userRef, // Use the user's UID to reference the author document
         'commentsCount': 0,
         'likesCount': 0,
-        'imageUrl': "https://picsum.photos/id/1004/960/540", // default
-        'date': Timestamp.now(),
+        'imageUrl': "https://picsum.photos/id/1004/960/540", // Example image URL, adjust as needed
+        'date': Timestamp.now(), // Sets the current timestamp as the post creation date
       });
     } catch (e) {
       print('Error creating post: $e');

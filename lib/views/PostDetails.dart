@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:pueblo_del_rio/models/post.dart';
+import 'package:pueblo_del_rio/models/user.dart';
 
 class PostDetails extends StatelessWidget {
   final Post post;
@@ -17,9 +19,22 @@ class PostDetails extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Author: ${post.author}',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            FutureBuilder<AppUser>(
+              future: post.getAuthor(), // Pass the authorRef to getAuthor),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Text("Loading author...", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold));
+                } else if (snapshot.hasError) {
+                  return Text("Error loading author", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold));
+                } else if (snapshot.hasData) {
+                  return Text(
+                    'Author: ${snapshot.data!.name}', // Assuming AppUser has a name field
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  );
+                } else {
+                  return Text("Author not found", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold));
+                }
+              },
             ),
             SizedBox(height: 8),
             Text(
@@ -33,7 +48,7 @@ class PostDetails extends StatelessWidget {
             ),
             SizedBox(height: 8),
             Text(
-              'Date: ${post.date?.toString() ?? 'N/A'}',
+              'Date: ${post.date != null ? DateFormat('yyyy-MM-dd – kk:mm').format(post.date!) : 'N/A'}',
               style: TextStyle(fontSize: 16),
             ),
           ],

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/user.dart';
 import 'package:pueblo_del_rio/controllers/firebaseAuthService.dart';
-import 'package:pueblo_del_rio/controllers/postController.dart'; // Import the PostController
+import 'package:pueblo_del_rio/controllers/postController.dart';
 
 class CreatePost extends StatefulWidget {
   const CreatePost({Key? key}) : super(key: key);
@@ -12,7 +12,7 @@ class CreatePost extends StatefulWidget {
 
 class _CreatePostState extends State<CreatePost> {
   final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
-  final PostController _postController = PostController(); // Declare postController as an instance variable
+  final PostController _postController = PostController();
   AppUser? user;
 
   @override
@@ -66,7 +66,7 @@ class _CreatePostState extends State<CreatePost> {
             Expanded(
               child: TextField(
                 controller: _bodyController,
-                maxLines: null, // Allows for multiline input
+                maxLines: null,
                 keyboardType: TextInputType.multiline,
                 decoration: InputDecoration(
                   labelText: 'Body',
@@ -81,74 +81,43 @@ class _CreatePostState extends State<CreatePost> {
   }
 
   void _createPost() async {
-    final String title = _titleController.text;
-    final String body = _bodyController.text;
+    final String title = _titleController.text.trim();
+    final String body = _bodyController.text.trim();
 
-    // Check if the title is empty
-    if (title.isEmpty) {
+    if (title.isEmpty || body.isEmpty) {
+      // Show error dialog if title or body is empty
       showDialog(
         context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Error'),
-            content: Text('Please enter a title.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(); // Close the dialog
-                },
-                child: Text('OK'),
-              ),
-            ],
-          );
-        },
+        builder: (BuildContext context) => AlertDialog(
+          title: Text('Error'),
+          content: Text(title.isEmpty ? 'Please enter a title.' : 'Please enter a body for your post.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('OK'),
+            ),
+          ],
+        ),
       );
-      return; // Exit the method without creating the post
+      return;
     }
 
-    // Check if the body is empty
-    if (body.isEmpty) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Error'),
-            content: Text('Please enter a body for your post.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(); // Close the dialog
-                },
-                child: Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
-      return; // Exit the method without creating the post
-    }
-
-    print('Title: $title');
-    print('Body: $body');
-    if (user != null) {
-      print('Author: ${user!.username}');
+    if (user != null && user!.id != null) {
       try {
-        await _postController.createNewPost(title, body, user!.username!);
-        print('Post created successfully');
-
-        // Clear the input fields after posting and trigger a rebuild
+        print(user!.id!); // Use user ID
+        await _postController.createNewPost(title, body, user!.id!); // Use user ID
+        // Success: Clear the input fields and maybe show a success message or navigate
         setState(() {
           _titleController.clear();
           _bodyController.clear();
         });
-
-        //navigate to home screen to show the post
-
       } catch (e) {
+        // Error handling: Show an error message
         print('Error creating post: $e');
-        // Handle error
       }
+    } else {
+      // Error handling: User ID is null
+      print('User ID is null');
     }
   }
-
 }

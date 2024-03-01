@@ -1,12 +1,14 @@
 class AppUser {
+  String? id;
   String? username;
   String? passwordHash;
   String? name;
   String? email;
   String? userBio;
-  String? userType; // 0: community member, 1: police officer
+  String? userType;
 
   AppUser({
+    this.id,
     this.username,
     this.passwordHash,
     this.name,
@@ -15,9 +17,10 @@ class AppUser {
     this.userBio,
   });
 
-  // Factory constructor to create a User instance from a map
-  factory AppUser.fromJson(Map<String, dynamic> json) {
+  // Updated to include an 'id' parameter
+  factory AppUser.fromJson(Map<String, dynamic> json, {String? id}) {
     return AppUser(
+      id: id, // Assign the passed 'id' to the AppUser's 'id'
       username: json['username'],
       passwordHash: json['passwordHash'],
       name: json['name'],
@@ -27,16 +30,15 @@ class AppUser {
     );
   }
 
-  // Convert User object to a map
   Map<String, dynamic> toJson() {
     return {
+      // 'id': id, // Typically not necessary to include in toJson as 'id' is usually managed by Firestore
       'username': username,
       'passwordHash': passwordHash,
       'name': name,
       'email': email,
       'userType': userType,
-      'userBio' : userBio,
+      'userBio': userBio,
     };
   }
 }
-
