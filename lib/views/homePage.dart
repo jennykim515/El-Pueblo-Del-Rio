@@ -130,25 +130,32 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildSearchBar() {
-    return TextField(
-      onChanged: (value) {
-        setState(() {
-          _searchQuery = value;
-        });
-      },
-      decoration: InputDecoration(
-        hintText: 'Search...',
-        prefixIcon: Icon(Icons.search),
-        prefixIconColor: Colors.grey,
-        fillColor: Colors.white,
-        filled: true,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(50.0),
-          borderSide: BorderSide.none,
-        ),
 
+  Widget _buildSearchBar() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0), // Adjust horizontal padding from the screen edges
+      child: TextField(
+        onChanged: (value) {
+          setState(() {
+            _searchQuery = value;
+          });
+        },
+        style: TextStyle(fontSize: 14), // Set the font size of the text
+        decoration: InputDecoration(
+          hintText: 'Search...',
+          hintStyle: TextStyle(fontSize: 14), // Set the font size of the hint text
+          prefixIcon: Icon(Icons.search),
+          prefixIconColor: Colors.grey,
+          fillColor: Colors.white,
+          filled: true,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20.0), // Adjust the border radius
+            borderSide: BorderSide.none,
+          ),
+        ),
       ),
     );
   }
+
+
 }

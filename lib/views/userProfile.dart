@@ -1,8 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../controllers/firebaseAuthService.dart';
 import '../models/user.dart';
+import '../nav/avatarImage.dart';
 
 class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({Key? key}) : super(key: key);
@@ -18,7 +17,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _bioController = TextEditingController();
 
-
   @override
   void initState() {
     super.initState();
@@ -32,7 +30,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       _nameController.text = _user?.name ?? '';
       _emailController.text = _user?.email ?? '';
       _bioController.text = _user?.userBio ?? '';
-
     });
   }
 
@@ -44,27 +41,24 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         actions: [
           IconButton(
             icon: Icon(Icons.save),
-            onPressed: () {
-              _saveChanges();
-            },
+            onPressed: _saveChanges,
           ),
         ],
       ),
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage("lib/assets/Background2.png"),
             fit: BoxFit.cover,
           ),
         ),
-        child: _user != null ? Padding(
-          padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
+        child: _user != null
+            ? SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              CircleAvatar(
-                backgroundImage: NetworkImage("User Image"), // You need to replace this with the actual user image
-              ),
+              AvatarImage("https://picsum.photos/id/1072/80/80"),
               SizedBox(height: 20),
               TextField(
                 controller: _nameController,
@@ -79,10 +73,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 controller: _bioController,
                 decoration: InputDecoration(labelText: 'About me'),
               ),
-              SizedBox(height: 50,),
-
+              SizedBox(height: 20),
               ElevatedButton(
-                  onPressed: (){_saveChanges();}, child: Text("Save Changes"))
+                onPressed: _saveChanges,
+                child: Text("Save Changes"),
+              ),
             ],
           ),
         )
@@ -99,19 +94,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     String newEmail = _emailController.text;
     String newBio = _bioController.text;
 
-    // You can add more fields to update here
-
     // Update the user object locally
     setState(() {
       _user?.name = newName;
       _user?.email = newEmail;
       _user?.userBio = newBio;
-
-      // Update other fields as needed
     });
 
-    //Update user information in Firestore using your authentication service
+    // Update user information in Firestore using your authentication service
     await _authService.updateUserDetails(name: newName, aboutMe: newBio);
-
   }
 }

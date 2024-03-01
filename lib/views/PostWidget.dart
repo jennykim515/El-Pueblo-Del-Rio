@@ -2,6 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // Import the intl package
 import 'package:pueblo_del_rio/models/post.dart';
+import 'package:pueblo_del_rio/nav/comment.dart';
+import 'package:pueblo_del_rio/nav/avatarImage.dart';
+
 
 import '../nav/likeButton.dart';
 
@@ -26,7 +29,8 @@ class PostWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _AvatarImage("https://picsum.photos/id/1072/80/80"),
+            const AvatarImage("https://picsum.photos/id/1072/80/80"),
+
             const SizedBox(width: 16),
             Expanded(
               child: Column(
@@ -100,22 +104,6 @@ class PostWidget extends StatelessWidget {
   }
 }
 
-class _AvatarImage extends StatelessWidget {
-  final String url;
-  const _AvatarImage(this.url, {Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 60,
-      height: 60,
-      decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          image: DecorationImage(image: NetworkImage(url))),
-    );
-  }
-}
-
 class _ActionsRow extends StatelessWidget {
   final Post item;
   const _ActionsRow({Key? key, required this.item}) : super(key: key);
@@ -132,18 +120,14 @@ class _ActionsRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          TextButton.icon(
-            onPressed: () {},
-            icon: const Icon(Icons.mode_comment_outlined),
-            label: Text(
-                item.commentsCount == 0 ? '' : item.commentsCount.toString()),
-          ),
           // TextButton.icon(
           //   onPressed: () {},
-          //   icon: const Icon(Icons.favorite_border),
-          //   label: Text(item.likesCount == 0 ? '' : item.likesCount.toString()),
+          //   icon: const Icon(Icons.mode_comment_outlined),
+          //   label: Text(
+          //       item.commentsCount == 0 ? '' : item.commentsCount.toString()),
           // ),
-          LikeButtonWidget(postId: item.id),
+          CommentWidget(postId: item.id, commentsCount: item.commentsCount,),
+          LikeButtonWidget(postId: item.id), //like button
           IconButton(
             icon: const Icon(CupertinoIcons.share_up),
             onPressed: () {},
