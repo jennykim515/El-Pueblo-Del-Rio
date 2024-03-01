@@ -52,7 +52,7 @@ class PostWidget extends StatelessWidget {
                           ),
                         ]),
                       )),
-                      Text('· 5m',
+                      Text(post.getDateAsString(),
                           style: Theme.of(context).textTheme.bodyLarge),
                       const Padding(
                         padding: EdgeInsets.only(left: 8.0),
