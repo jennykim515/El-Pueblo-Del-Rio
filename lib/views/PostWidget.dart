@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // Import the intl package
 import 'package:pueblo_del_rio/models/post.dart';
 
+import '../nav/likeButton.dart';
+
 class PostWidget extends StatelessWidget {
   final Post post;
 
@@ -136,11 +138,12 @@ class _ActionsRow extends StatelessWidget {
             label: Text(
                 item.commentsCount == 0 ? '' : item.commentsCount.toString()),
           ),
-          TextButton.icon(
-            onPressed: () {},
-            icon: const Icon(Icons.favorite_border),
-            label: Text(item.likesCount == 0 ? '' : item.likesCount.toString()),
-          ),
+          // TextButton.icon(
+          //   onPressed: () {},
+          //   icon: const Icon(Icons.favorite_border),
+          //   label: Text(item.likesCount == 0 ? '' : item.likesCount.toString()),
+          // ),
+          LikeButtonWidget(postId: item.id),
           IconButton(
             icon: const Icon(CupertinoIcons.share_up),
             onPressed: () {},

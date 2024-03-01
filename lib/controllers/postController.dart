@@ -68,4 +68,32 @@ class PostController {
       throw e;
     }
   }
+
+  Future<int> getLikesCountForPost(String postId) async {
+    try {
+      DocumentSnapshot<Map<String, dynamic>> postSnapshot =
+      await _firestore.collection('posts').doc(postId).get();
+
+      if (postSnapshot.exists) {
+        return postSnapshot.data()?['likesCount'] ?? 0;
+      } else {
+        throw Exception('Post with ID $postId does not exist.');
+      }
+    } catch (e) {
+      print('Error getting likes count for post: $e');
+      throw e;
+    }
+  }
+
+  Future<void> updateLikesCountForPost(String postId, int newLikesCount) async {
+    try {
+      await _firestore.collection('posts').doc(postId).update({
+        'likesCount': newLikesCount,
+      });
+    } catch (e) {
+      print('Error updating likes count for post: $e');
+      throw e;
+    }
+  }
 }
+
