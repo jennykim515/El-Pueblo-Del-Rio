@@ -103,6 +103,28 @@ class _CreatePostState extends State<CreatePost> {
     );
   }
 
+  void _showLoadingDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    barrierDismissible: false, // User must not dismiss the dialog by tapping outside of it.
+    builder: (BuildContext context) {
+      return Dialog(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(width: 20),
+              Text("Posting..."),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
   void _getImage() {
     final html.FileUploadInputElement input = html.FileUploadInputElement()..accept = 'image/*';
     input.click();
@@ -144,6 +166,8 @@ class _CreatePostState extends State<CreatePost> {
       return;
     }
 
+    _showLoadingDialog(context); // Show loading dialog
+
     if (user != null && user!.id != null) {
       try {
         // Upload the image to Firebase Storage
@@ -153,22 +177,26 @@ class _CreatePostState extends State<CreatePost> {
         final downloadUrl = await task.ref.getDownloadURL();
 
         // Create new Post object with imageURL
-        await _postController.createNewPost(title, body, user!.id!, imageUrl:downloadUrl);
+        await _postController.createNewPost(title, body, user!.id!, imageUrl: downloadUrl);
 
-        // Success: Clear the input fields and reset local state
-        setState(() {
-          _titleController.clear();
-          _bodyController.clear();
-          imageUrl = null;
-          _selectedFile = null; // Reset the selected file
-        });
+        Navigator.of(context).pop(); // Dismiss the loading dialog
+
+        // Navigate back to the home page
+        Navigator.of(context).pop();
+
+        // Optionally, you can use a Snackbar to show a success message
+        // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Post created successfully!")));
       } catch (e) {
+        Navigator.of(context).pop(); // Ensure loading dialog is dismissed in case of error
         // Error handling: Show an error message
         print('Error creating post: $e');
+        // Show an error dialog or Snackbar here if needed
       }
     } else {
+      Navigator.of(context).pop(); // Dismiss loading dialog if user ID is null
       // Error handling: User ID is null
       print('User ID is null');
     }
   }
+
 }

@@ -42,6 +42,7 @@ class MyApp extends StatelessWidget {
           titleMedium: GoogleFonts.alice(color: policeBlue,fontSize: 20, ), // for body text
           titleLarge: GoogleFonts.alice(color: Colors.orange, fontSize:23, fontWeight: FontWeight.normal),
           bodyLarge: TextStyle(color: Colors.orange, fontSize:15, fontWeight: FontWeight.normal), // for app bar title
+          labelSmall: TextStyle(color: Colors.orange, fontSize:12, fontWeight: FontWeight.normal), // for app bar title
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
