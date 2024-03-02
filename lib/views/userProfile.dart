@@ -94,24 +94,51 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   }
 
   Future<void> _saveChanges() async {
-    // Update user information in Firestore
+    _showLoadingDialog(); // Show the loading dialog
+
     String newName = _nameController.text;
     String newEmail = _emailController.text;
     String newBio = _bioController.text;
 
-    // You can add more fields to update here
-
+    // Assume _authService.updateUserDetails does the actual saving work
     // Update the user object locally
-    setState(() {
-      _user?.name = newName;
-      _user?.email = newEmail;
-      _user?.userBio = newBio;
+    try {
+      await _authService.updateUserDetails(name: newName, email: newEmail, aboutMe: newBio);
+      // Success, update local user object and UI
+      setState(() {
+        _user?.name = newName;
+        _user?.email = newEmail;
+        _user?.userBio = newBio;
+      });
+    } catch (error) {
+      // Handle errors, e.g., show an error dialog
+      print("Error saving changes: $error");
+    }
 
-      // Update other fields as needed
-    });
-
-    //Update user information in Firestore using your authentication service
-    await _authService.updateUserDetails(name: newName, aboutMe: newBio);
-
+    Navigator.of(context).pop(); // Dismiss the loading dialog
   }
+
+
+  void _showLoadingDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // User must not dismiss the dialog by tapping outside of it.
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(width: 20),
+                Text("Saving..."),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
 }
