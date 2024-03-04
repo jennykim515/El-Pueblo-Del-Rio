@@ -11,6 +11,30 @@ class PostWidget extends StatelessWidget {
 
   const PostWidget({Key? key, required this.post}) : super(key: key);
 
+  String getDateAsString(DateTime dateTime) {
+    if (post.date == null) {
+      return "";
+    }
+    DateTime now = DateTime.now();
+    Duration difference = now.difference(dateTime);
+
+    if (difference.inSeconds < 60) {
+      return '${difference.inSeconds}s';
+    } else if (difference.inMinutes < 60) {
+      return '${difference.inMinutes}m';
+    } else if (difference.inHours < 24) {
+      return '${difference.inHours}h';
+    } else if (difference.inDays < 7) {
+      return '${difference.inDays}d';
+    }
+    else if (dateTime.year == now.year) {
+      return DateFormat.MMMd().format(post.date!);
+    }
+    else {
+      return DateFormat.yMMMd().format(post.date!);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -60,7 +84,7 @@ class PostWidget extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            Text('· 5m', style: Theme.of(context).textTheme.bodyLarge),
+                            Text(getDateAsString(post.date!) ?? '', style: Theme.of(context).textTheme.bodyLarge),
                             const Padding(
                               padding: EdgeInsets.only(left: 8.0),
                               child: Icon(Icons.more_horiz),
