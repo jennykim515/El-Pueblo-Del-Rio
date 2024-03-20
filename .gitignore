@@ -46,3 +46,7 @@ app.*.map.json
 
 # firestore connection file 
 /ios/Runner/GoogleService-Info.plist
+
+
+# google cloud sdk
+/google-cloud-sdk/

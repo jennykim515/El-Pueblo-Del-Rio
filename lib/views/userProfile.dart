@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../controllers/firebaseAuthService.dart';
 import '../models/user.dart';
@@ -17,6 +19,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _bioController = TextEditingController();
 
+
   @override
   void initState() {
     super.initState();
@@ -30,6 +33,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       _nameController.text = _user?.name ?? '';
       _emailController.text = _user?.email ?? '';
       _bioController.text = _user?.userBio ?? '';
+
     });
   }
 
@@ -41,24 +45,27 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         actions: [
           IconButton(
             icon: Icon(Icons.save),
-            onPressed: _saveChanges,
+            onPressed: () {
+              _saveChanges();
+            },
           ),
         ],
       ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage("lib/assets/Background2.png"),
             fit: BoxFit.cover,
           ),
         ),
-        padding: const EdgeInsets.all(16.0),
-        child: _user != null
-            ? SingleChildScrollView(
+        child: _user != null ? Padding(
+          padding: EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              AvatarImage("https://picsum.photos/id/1072/80/80"),
+              CircleAvatar(
+                backgroundImage: NetworkImage("User Image"), // You need to replace this with the actual user image
+              ),
               SizedBox(height: 20),
               TextField(
                 controller: _nameController,
@@ -89,19 +96,51 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   }
 
   Future<void> _saveChanges() async {
-    // Update user information in Firestore
+    _showLoadingDialog(); // Show the loading dialog
+
     String newName = _nameController.text;
     String newEmail = _emailController.text;
     String newBio = _bioController.text;
 
+    // Assume _authService.updateUserDetails does the actual saving work
     // Update the user object locally
-    setState(() {
-      _user?.name = newName;
-      _user?.email = newEmail;
-      _user?.userBio = newBio;
-    });
+    try {
+      await _authService.updateUserDetails(name: newName, email: newEmail, aboutMe: newBio);
+      // Success, update local user object and UI
+      setState(() {
+        _user?.name = newName;
+        _user?.email = newEmail;
+        _user?.userBio = newBio;
+      });
+    } catch (error) {
+      // Handle errors, e.g., show an error dialog
+      print("Error saving changes: $error");
+    }
 
-    // Update user information in Firestore using your authentication service
-    await _authService.updateUserDetails(name: newName, aboutMe: newBio);
+    Navigator.of(context).pop(); // Dismiss the loading dialog
   }
+
+
+  void _showLoadingDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // User must not dismiss the dialog by tapping outside of it.
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(width: 20),
+                Text("Saving..."),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
 }

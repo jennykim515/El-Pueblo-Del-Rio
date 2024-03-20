@@ -40,6 +40,9 @@ dependencies:
   cloud_firestore: any
   intl: any
   bcrypt: any
+  image_picker: ^0.8.4+2
+  firebase_storage: ^11.6.0
+  uuid: ^3.0.4
 
 dev_dependencies:
   flutter_test:

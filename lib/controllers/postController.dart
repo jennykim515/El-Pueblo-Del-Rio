@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pueblo_del_rio/models/comment.dart';
@@ -67,12 +69,12 @@ class PostController {
     }
   }
 
-  Future<void> createNewPost(String title, String body, String userId) async {
+  Future<void> createNewPost(String title, String body, String userId, {String? imageUrl}) async {
     try {
       // Directly use the UID to create a reference to the user's document in the 'users' collection
       DocumentReference userRef = FirebaseFirestore.instance.collection('users').doc(userId);
 
-      await _firestore.collection('posts').add({
+      Map<String, dynamic> postData = {
         'title': title,
         'body': body,
         'authorRef': userRef, // Use the user's UID to reference the author document
@@ -81,7 +83,13 @@ class PostController {
         'likesCount': 0,
         'imageUrl': "https://picsum.photos/id/1004/960/540", // Example image URL, adjust as needed
         'date': Timestamp.now(), // Sets the current timestamp as the post creation date
-      });
+      };
+
+      if (imageUrl != null) {
+        postData['imageUrl'] = imageUrl;
+      }
+
+      await _firestore.collection('posts').add(postData);
     } catch (e) {
       print('Error creating post: $e');
       throw e;
@@ -132,6 +140,15 @@ class PostController {
     }
   }
 
-
+  Future<String> uploadImageToStorage(File image) async {
+    try {
+      // Here you would implement the logic to upload the image to Firebase Storage and get its URL
+      // For demonstration purposes, we'll just return a placeholder URL
+      return "https://example.com/image.jpg";
+    } catch (e) {
+      print('Error uploading image: $e');
+      throw e;
+    }
+  }
 }
 

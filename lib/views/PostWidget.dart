@@ -14,6 +14,30 @@ class PostWidget extends StatelessWidget {
 
   const PostWidget({Key? key, required this.post}) : super(key: key);
 
+  String getDateAsString(DateTime dateTime) {
+    if (post.date == null) {
+      return "";
+    }
+    DateTime now = DateTime.now();
+    Duration difference = now.difference(dateTime);
+
+    if (difference.inSeconds < 60) {
+      return '${difference.inSeconds}s';
+    } else if (difference.inMinutes < 60) {
+      return '${difference.inMinutes}m';
+    } else if (difference.inHours < 24) {
+      return '${difference.inHours}h';
+    } else if (difference.inDays < 7) {
+      return '${difference.inDays}d';
+    }
+    else if (dateTime.year == now.year) {
+      return DateFormat.MMMd().format(post.date!);
+    }
+    else {
+      return DateFormat.yMMMd().format(post.date!);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -36,7 +60,7 @@ class PostWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   FutureBuilder<AppUser>(
-                    future: post.getAuthor(), // Corrected to call getAuthor without passing authorRef
+                    future: post.getAuthor(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return CircularProgressIndicator();
@@ -52,22 +76,22 @@ class PostWidget extends StatelessWidget {
                                 text: TextSpan(
                                   children: [
                                     TextSpan(
-                                      text: snapshot.data!.name ?? "Unknown", // Display the author's name
-                                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black),
+                                      text: snapshot.data!.name ?? "Unknown",
+                                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.black),
                                     ),
                                     TextSpan(
-                                      text: " ${snapshot.data!.userType}", // Display the author's user type
-                                      style: Theme.of(context).textTheme.bodyLarge,
+                                      text: " ${snapshot.data!.userType}",
+                                      style: Theme.of(context).textTheme.labelSmall,
                                     ),
                                   ],
                                 ),
                               ),
                             ),
-                            Text('· 5m', style: Theme.of(context).textTheme.bodyLarge),
+                            Text(getDateAsString(post.date!) ?? '', style: Theme.of(context).textTheme.bodyLarge),
                             const Padding(
                               padding: EdgeInsets.only(left: 8.0),
                               child: Icon(Icons.more_horiz),
-                            )
+                            ),
                           ],
                         );
                       } else {
@@ -75,6 +99,15 @@ class PostWidget extends StatelessWidget {
                       }
                     },
                   ),
+                  Text(
+                    post.title, // Display the post's title
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                      color: Colors.black,
+                    ),
+                  ),
+                  const SizedBox(height: 8), // Space between title and body
                   if (post.body != null) Text(post.body!),
                   if (post.imageUrl != null)
                     Container(

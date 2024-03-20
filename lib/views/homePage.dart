@@ -79,7 +79,10 @@ class _HomePageState extends State<HomePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => const CreatePost()),
-                      );
+                      ).then((_) {
+                        // Force a rebuild to refresh the posts.
+                        setState(() {});
+                      });
                     },
                     child: Text("Add a Post +"),
 
