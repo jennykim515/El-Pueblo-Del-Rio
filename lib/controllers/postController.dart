@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:pueblo_del_rio/models/comment.dart';
 import 'package:pueblo_del_rio/models/post.dart';
 
 class PostController {
@@ -8,12 +10,48 @@ class PostController {
     try {
       QuerySnapshot<Map<String, dynamic>> snapshot = await _firestore.collection('posts').orderBy('date', descending: true).get();
       List<Post> posts = snapshot.docs.map((doc) => Post.fromFirestore(doc)).toList();
+      print(posts);
+
       return posts;
     } catch (e) {
       print('Error fetching posts: $e');
       return [];
     }
   }
+
+
+  Future<List<Comment>> getAllComments(String postID) async {
+    try {
+      print(postID);
+      DocumentSnapshot<Map<String, dynamic>> postSnapshot = await _firestore.collection('posts').doc(postID).get();
+      // Check if the post exists
+      if (postSnapshot.exists) {
+        // Access the comments array from the post document
+        List<dynamic> commentsData = postSnapshot.data()?['comments'] ?? [];
+        print(commentsData.toString());
+        // Convert the comments data into Comment objects
+        List<Comment> comments = commentsData.map((comment) {
+          return Comment(
+            authorRef: comment['authorRef'],
+            commentStr: comment['commentStr'],
+            id: comment['id'],
+          );
+        }).toList();
+
+        print("comments in post Controller: $comments");
+
+        return comments;
+      } else {
+        // Post does not exist, return an empty list
+        print("Post with ID $postID does not exist");
+        return [];
+      }
+    } catch (e) {
+      print('Error fetching comments: $e');
+      return [];
+    }
+  }
+
 
   Future<List<Post>> searchPosts(String query) async {
     try {
@@ -39,6 +77,7 @@ class PostController {
         'body': body,
         'authorRef': userRef, // Use the user's UID to reference the author document
         'commentsCount': 0,
+        'comments': <Comment>[],
         'likesCount': 0,
         'imageUrl': "https://picsum.photos/id/1004/960/540", // Example image URL, adjust as needed
         'date': Timestamp.now(), // Sets the current timestamp as the post creation date
@@ -48,6 +87,22 @@ class PostController {
       throw e;
     }
   }
+  Future<void> createNewComment(Comment newComment, String postID) async {
+    try {
+      // Directly use the UID to create a reference to the user's document in the 'users' collection
+      DocumentReference userRef = _firestore.collection('users').doc(newComment.authorRef); // Assuming currUser is an AppUser object
+
+      await _firestore.collection('posts').doc(postID).update({
+        'comments': FieldValue.arrayUnion([newComment.toJson()]), // Add the new comment to the 'comments' array
+        'commentsCount': FieldValue.increment(1), // Increment the comments count
+      });
+    } catch (e) {
+      print('Error creating comment: $e');
+      throw e;
+    }
+  }
+
+
 
   Future<int> getLikesCountForPost(String postId) async {
     try {
@@ -55,6 +110,7 @@ class PostController {
       await _firestore.collection('posts').doc(postId).get();
 
       if (postSnapshot.exists) {
+        print("getLikesCountForPost");
         return postSnapshot.data()?['likesCount'] ?? 0;
       } else {
         throw Exception('Post with ID $postId does not exist.');
@@ -75,5 +131,7 @@ class PostController {
       throw e;
     }
   }
+
+
 }
 

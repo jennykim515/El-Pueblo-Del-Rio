@@ -92,4 +92,35 @@ class FirebaseAuthService {
       return null;
     }
   }
+  Future<AppUser?> fetchUserDetailsByID(String userID) async {
+    try {
+      DocumentSnapshot<Map<String, dynamic>> userSnapshot =
+      await _firestore.collection('users').doc(userID).get();
+
+      if (userSnapshot.exists) {
+        return AppUser.fromJson(userSnapshot.data()!, id: userSnapshot.id);
+      } else {
+        print('User document with ID $userID does not exist');
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching user details: $e');
+      return null;
+    }
+  }
+
+  Future<String?> getCurrentUserId() async {
+    try {
+      User? currentUser = _auth.currentUser;
+      if (currentUser != null) {
+        return currentUser.uid;
+      } else {
+        print('Current user is null');
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching current user ID: $e');
+      return null;
+    }
+  }
 }

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // Import the intl package
 import 'package:pueblo_del_rio/models/post.dart';
 import 'package:pueblo_del_rio/models/user.dart';
-import 'package:pueblo_del_rio/nav/comment.dart';
+import 'package:pueblo_del_rio/nav/commentWidget.dart';
 import 'package:pueblo_del_rio/nav/avatarImage.dart';
 
 
@@ -147,16 +147,16 @@ class _ActionsRow extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           TextButton.icon(
-            onPressed: () {},
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => CommentWidget(postID: item.id),
+              );
+            },
             icon: const Icon(Icons.mode_comment_outlined),
             label: Text(
                 item.commentsCount == 0 ? '' : item.commentsCount.toString()),
           ),
-          // TextButton.icon(
-          //   onPressed: () {},
-          //   icon: const Icon(Icons.favorite_border),
-          //   label: Text(item.likesCount == 0 ? '' : item.likesCount.toString()),
-          // ),
           LikeButtonWidget(postId: item.id),
           IconButton(
             icon: const Icon(CupertinoIcons.share_up),
