@@ -54,13 +54,47 @@ class _CommentWidgetState extends State<CommentWidget> {
               child: ListView.builder(
                 itemCount: comments.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(comments[index].commentStr),
-                    subtitle: Text('By: ${comments[index].getAuthor().toString()}'),
+                  return FutureBuilder<String>(
+                    future: comments[index].getAuthorName(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return ListTile(
+                          title: Text(comments[index].commentStr),
+                          subtitle: Text('By: Loading...'),
+                        );
+                      } else if (snapshot.hasError) {
+                        return ListTile(
+                          title: Text(comments[index].commentStr),
+                          subtitle: Text('By: Error: ${snapshot.error}'),
+                        );
+                      } else {
+                        return ListTile(
+                          title: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: '${snapshot.data}',
+                                      style: TextStyle(fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 8), // Add vertical space between title and subtitle
+                              Text(comments[index].commentStr),
+                            ],
+                          ),
+                        );
+
+                      }
+                    },
                   );
                 },
               ),
             ),
+
             SizedBox(height: 16),
             CreateComment(postID: widget.postID),
           ],

@@ -21,6 +21,22 @@ class PostController {
     }
   }
 
+  Future<String> getNameFromRef (String UserID) async {
+    try {
+      DocumentSnapshot<Map<String, dynamic>> postSnapshot = await _firestore.collection('users').doc(UserID).get();
+
+      if (postSnapshot.exists) {
+        return postSnapshot.data()?['name'];
+
+      } else {
+        throw Exception('Post with ID $UserID does not exist.');
+      }
+    } catch (e) {
+      print('Error getting name for ref: $e');
+      throw e;
+    }
+  }
+
 
   Future<List<Comment>> getAllComments(String postID) async {
     try {
@@ -53,6 +69,8 @@ class PostController {
       return [];
     }
   }
+
+
 
 
   Future<List<Post>> searchPosts(String query) async {

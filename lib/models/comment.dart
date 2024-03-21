@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pueblo_del_rio/models/user.dart';
 import '../controllers/firebaseAuthService.dart';
+import '../controllers/postController.dart';
 
 class Comment{
   final String id; //post id
@@ -21,6 +22,22 @@ class Comment{
     } catch (e) {
       print('Error fetching author details: $e');
       return null;
+    }
+  }
+
+  Future<String> getAuthorName() async {
+    try {
+      final authorName = await PostController().getNameFromRef(authorRef);
+      if (authorName != null) {
+        print("author name : " + authorName);
+        return authorName;
+      } else {
+        throw Exception('Author name is null.');
+      }
+    } catch (e) {
+      // Handle any errors if necessary
+      print('Error getting author name: $e');
+      rethrow; // Rethrow the error to propagate it further if needed
     }
   }
 
