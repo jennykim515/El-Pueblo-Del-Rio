@@ -62,7 +62,10 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   IconButton(
                     onPressed: signUserOut,
-                    icon: const Icon(Icons.logout),
+                    icon: Tooltip(
+                      message: 'Sign Out', // Tooltip message to display
+                      child: Icon(Icons.logout),
+                    ),
                   ),
                   user != null
                       ? Text(

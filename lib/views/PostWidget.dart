@@ -192,9 +192,12 @@ class _ActionsRow extends StatelessWidget {
           ),
           LikeButtonWidget(postId: item.id),
           IconButton(
-            icon: const Icon(CupertinoIcons.share_up),
             onPressed: () {},
-          )
+            icon: Tooltip(
+              message: 'Share', // Tooltip message to display
+              child: Icon(CupertinoIcons.share_up),
+            ),
+          ),
         ],
       ),
     );
