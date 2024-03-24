@@ -224,7 +224,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
 
     try {
-      await _auth.signUpWithEmailAndPassword(email, password, name, userType);
+      await _auth.signUpWithEmailAndPassword(email, password, name, userType, context);
       Navigator.pop(context); // sometimes causes issues
     }
     // }on FirebaseAuthException catch (e) {

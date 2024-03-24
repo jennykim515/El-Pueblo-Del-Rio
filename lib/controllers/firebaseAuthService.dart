@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import '../models/user.dart';
 
 class FirebaseAuthService {
@@ -7,7 +8,7 @@ class FirebaseAuthService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Sign up method
-  Future<AppUser?> signUpWithEmailAndPassword(String email, String password, String name, String userType) async {
+  Future<AppUser?> signUpWithEmailAndPassword(String email, String password, String name, String userType, BuildContext context) async {
     try {
       UserCredential credential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
 
@@ -20,6 +21,19 @@ class FirebaseAuthService {
         'aboutMe': "Get to know me here", // Optional initial value
       });
 
+      return showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text("Successfully registered your account."),
+            actions: [
+              TextButton(
+                child: Text("OK"),
+                onPressed: () => Navigator.pop(context),
+              )
+            ],
+          )
+      );
+
       // Return the AppUser instance
       return AppUser(
         id: credential.user!.uid, // Use the UID as the id for AppUser
@@ -31,6 +45,37 @@ class FirebaseAuthService {
       );
     } catch (e) {
       print(e);
+
+      //register pop-ups
+      if (e.toString() == "[firebase_auth/email-already-in-use] The email address is already in use by another account.") {
+        return showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text(e.toString().substring(37)),
+              actions: [
+                TextButton(
+                  child: Text("OK"),
+                  onPressed: () => Navigator.pop(context),
+                )
+              ],
+            )
+        );
+      }
+      else {
+        return showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text(e.toString().substring(30)),
+              actions: [
+                TextButton(
+                  child: Text("OK"),
+                  onPressed: () => Navigator.pop(context),
+                )
+              ],
+            )
+        );
+      }
+
       return null;
     }
   }
