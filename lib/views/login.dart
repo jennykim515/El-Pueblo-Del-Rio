@@ -36,11 +36,12 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     try {
-      _auth.signInWithEmailAndPassword(email, password);
+      _auth.signInWithEmailAndPassword(email, password, context);
       // pop the loading circle
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
 
+      /*
       // pop the loading circle
       Navigator.pop(context);
       // WRONG EMAIL
@@ -48,7 +49,6 @@ class _LoginPageState extends State<LoginPage> {
         // show error to user
         wrongEmailMessage();
       }
-
       // WRONG PASSWORD
       else if (e.code == 'wrong-password') {
         // show error to user
@@ -59,6 +59,7 @@ class _LoginPageState extends State<LoginPage> {
         // show error to user
         wrongPasswordMessage();
       }
+      */
     }
   }
 

@@ -25,18 +25,15 @@ class FirebaseAuthService {
         return null;
       }
 
-      return showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text("Successfully registered your account."),
-            actions: [
-              TextButton(
-                child: Text("OK"),
-                onPressed: () => Navigator.pop(context),
-              )
-            ],
-          )
-      );
+      void successfulRegisterMessage() {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Successfully registered your account'),
+          ),
+        );
+      }
+
+      successfulRegisterMessage();
 
       // Return the AppUser instance
       return AppUser(
@@ -85,12 +82,60 @@ class FirebaseAuthService {
   }
 
   // Sign in method
-  Future<AppUser?> signInWithEmailAndPassword(String email, String password) async {
+  Future<AppUser?> signInWithEmailAndPassword(String email, String password, BuildContext context) async {
     try {
       UserCredential credential = await _auth.signInWithEmailAndPassword(email: email, password: password);
+      if (!context.mounted) {
+        return null;
+      }
       return fetchUserDetails(); // Directly fetch user details after successful sign-in
-    } catch (e) {
+    } on FirebaseAuthException catch (e) {
       print('Error signing in: $e');
+
+      void wrongPasswordMessage() {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Wrong Password'),
+          ),
+        );
+      }
+
+      void wrongEmailMessage() {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Wrong Email'),
+          ),
+        );
+      }
+
+      void invalidEmailMessage() {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Invalid Email'),
+          ),
+        );
+      }
+
+      // WRONG EMAIL
+      if (e.code == 'user-not-found') {
+        // show error to user
+        wrongEmailMessage();
+      }
+      // INVALID EMAIL
+      else if (e.code == 'invalid-email') {
+        // show error to user
+        invalidEmailMessage();
+      }
+      // WRONG PASSWORD
+      else if (e.code == 'wrong-password') {
+        // show error to user
+        wrongPasswordMessage();
+      }
+      // WRONG PASSWORD
+      else if (e.code == 'invalid-credential') {
+        // show error to user
+        wrongPasswordMessage();
+      }
       return null;
     }
   }
