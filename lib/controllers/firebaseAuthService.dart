@@ -21,6 +21,10 @@ class FirebaseAuthService {
         'aboutMe': "Get to know me here", // Optional initial value
       });
 
+      if (!context.mounted) {
+        return null;
+      }
+
       return showDialog(
           context: context,
           builder: (context) => AlertDialog(
