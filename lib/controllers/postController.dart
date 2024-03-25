@@ -7,6 +7,7 @@ import 'package:pueblo_del_rio/models/post.dart';
 
 class PostController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  Map<String, List<Post>> searchCache = {};
 
   Future<List<Post>> getAllPostsSortedByDate() async {
     try {
@@ -71,19 +72,30 @@ class PostController {
   }
 
   Future<List<Post>> searchPosts(String query) async {
+    final queryLowercase = query.toLowerCase();
+
+    // Check if the cache contains the query results
+    if (searchCache.containsKey(queryLowercase)) {
+      return searchCache[queryLowercase]!;
+    }
+
     try {
-      // Fetch a larger dataset that might contain the search term
       QuerySnapshot querySnapshot = await _firestore.collection('posts').get();
-      // Perform case-insensitive filtering on the client side
+
       List<Post> posts = querySnapshot.docs.map((doc) => Post.fromFirestore(doc))
-          .where((post) => post.title.toLowerCase().contains(query.toLowerCase()))
-          .toList();
+        .where((post) => post.title.toLowerCase().contains(queryLowercase))
+        .toList();
+
+      // Cache the search results
+      searchCache[queryLowercase] = posts;
+
       return posts;
     } catch (e) {
       print('Error searching posts: $e');
       return [];
     }
   }
+
 
   Future<void> createNewPost(String title, String body, String userId, {String? imageUrl}) async {
     try {
