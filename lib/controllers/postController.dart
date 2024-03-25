@@ -70,16 +70,14 @@ class PostController {
     }
   }
 
-
-
-
   Future<List<Post>> searchPosts(String query) async {
     try {
-      QuerySnapshot querySnapshot = await _firestore
-          .collection('posts')
-          .where('title', isGreaterThanOrEqualTo: query, isLessThan: query + 'z')
-          .get();
-      List<Post> posts = querySnapshot.docs.map((doc) => Post.fromFirestore(doc)).toList();
+      // Fetch a larger dataset that might contain the search term
+      QuerySnapshot querySnapshot = await _firestore.collection('posts').get();
+      // Perform case-insensitive filtering on the client side
+      List<Post> posts = querySnapshot.docs.map((doc) => Post.fromFirestore(doc))
+          .where((post) => post.title.toLowerCase().contains(query.toLowerCase()))
+          .toList();
       return posts;
     } catch (e) {
       print('Error searching posts: $e');
