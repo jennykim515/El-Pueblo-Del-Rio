@@ -38,7 +38,7 @@ class Post {
       comments: data['comments'] ?? commentList,
       likesCount: data['likesCount'] ?? 0,
       date: data['date']?.toDate(),
-      imageUrl: data['imageUrl'] ?? '',
+      imageUrl: data['imageUrl'] ?? 'https://picsum.photos/id/1004/960/540',
     );
   }
 

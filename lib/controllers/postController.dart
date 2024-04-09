@@ -96,6 +96,14 @@ class PostController {
     }
   }
 
+  Future<void> deletePost(String postId) async {
+    try {
+      await _firestore.collection('posts').doc(postId).delete();
+    } catch (e) {
+      print('Error deleting post: $e');
+      throw e;
+    }
+  }
 
   Future<void> createNewPost(String title, String body, String userId, {String? imageUrl}) async {
     try {

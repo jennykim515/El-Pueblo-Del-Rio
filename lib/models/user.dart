@@ -6,6 +6,8 @@ class AppUser {
   String? email;
   String? aboutMe;
   String? userType;
+  late final String? imageUrl;
+
 
   AppUser({
     this.id,
@@ -15,6 +17,7 @@ class AppUser {
     this.email,
     this.userType,
     this.aboutMe,
+    this.imageUrl
   });
 
   // Updated to include an 'id' parameter
@@ -27,6 +30,7 @@ class AppUser {
       email: json['email'],
       userType: json['userType'],
       aboutMe: json['aboutMe'],
+      imageUrl: json['imageUrl']
     );
   }
 
@@ -39,6 +43,7 @@ class AppUser {
       'email': email,
       'userType': userType,
       'aboutMe': aboutMe,
+      'imageUrl': imageUrl
     };
   }
 }

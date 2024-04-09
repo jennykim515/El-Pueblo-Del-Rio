@@ -60,13 +60,14 @@ class _HomePageState extends State<HomePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  IconButton(
+                  FloatingActionButton(
                     onPressed: signUserOut,
-                    icon: Tooltip(
+                    child: Tooltip(
                       message: 'Sign Out', // Tooltip message to display
                       child: Icon(Icons.logout),
                     ),
                   ),
+
                   user != null
                       ? Text(
                     'Hi, ${user!.name}',
@@ -76,7 +77,7 @@ class _HomePageState extends State<HomePage> {
 
 
 
-                  ElevatedButton(
+                  FloatingActionButton(
                     onPressed: () {
                       // Navigate to new post creation page
                       Navigator.push(
@@ -87,7 +88,7 @@ class _HomePageState extends State<HomePage> {
                         setState(() {});
                       });
                     },
-                    child: Text("Add a Post +"),
+                    child: Icon(Icons.add, color: Colors.white,), // Plus icon
 
                   ),
                 ],

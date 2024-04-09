@@ -1,9 +1,17 @@
+import 'dart:html';
+import 'dart:html';
+import 'dart:html' as html;
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import '../controllers/firebaseAuthService.dart';
 import '../models/user.dart';
 import '../nav/avatarImage.dart';
+import 'package:uuid/uuid.dart'; // For generating unique file names
+
 
 class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({Key? key}) : super(key: key);
@@ -19,6 +27,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _bioController = TextEditingController();
 
+  String? imageUrl; //will be set in "getImage"
+  html.File? _selectedFile; // Add this line to store the selected file
+
 
   @override
   void initState() {
@@ -33,6 +44,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       _nameController.text = _user?.name ?? '';
       _emailController.text = _user?.email ?? '';
       _bioController.text = _user?.aboutMe ?? '';
+
 
     });
   }
@@ -64,9 +76,15 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               CircleAvatar(
-                backgroundImage: NetworkImage("User Image"), // You need to replace this with the actual user image
+                backgroundImage: NetworkImage(imageUrl?? "https://picsum.photos/id/1004/960/540"), // You need to replace this with the actual user image
               ),
-              SizedBox(height: 20),
+
+              SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: _getImage,
+                child: Text('Upload Image'),
+              ),
+              SizedBox(height:20),
               TextField(
                 controller: _nameController,
                 decoration: InputDecoration(labelText: 'Name'),
@@ -105,13 +123,22 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     // Assume _authService.updateUserDetails does the actual saving work
     // Update the user object locally
     try {
-      await _authService.updateUserDetails(name: newName, email: newEmail, aboutMe: newBio);
+      //UPDATING user details in firebase
+      String filePath = 'uploads/${Uuid().v4()}.png';
+      final ref = FirebaseStorage.instance.ref().child(filePath);
+      final task = await ref.putBlob(_selectedFile!);
+      final downloadUrl = await task.ref.getDownloadURL();
+
+      await _authService.updateUserDetails(name: newName, email: newEmail, aboutMe: newBio, imageUrl: downloadUrl);
       // Success, update local user object and UI
       setState(() {
         _user?.name = newName;
         _user?.email = newEmail;
         _user?.aboutMe = newBio;
+        _user?.imageUrl = imageUrl;
       });
+
+
     } catch (error) {
       // Handle errors, e.g., show an error dialog
       print("Error saving changes: $error");
@@ -141,6 +168,26 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         );
       },
     );
+  }
+
+  //Pick image to upload
+  void _getImage() {
+    final html.FileUploadInputElement input = html.FileUploadInputElement()..accept = 'image/*';
+    input.click();
+    input.onChange.listen((event) async {
+      final List<html.File>? files = input.files;
+      if (files != null && files.isNotEmpty) {
+        final html.File file = files.first;
+        _selectedFile = file; // Store the selected file
+        final reader = html.FileReader();
+        reader.readAsDataUrl(file);
+        reader.onLoadEnd.listen((event) {
+          setState(() {
+            imageUrl = reader.result as String?; // Display the local image
+          });
+        });
+      }
+    });
   }
 
 }

@@ -19,6 +19,7 @@ class FirebaseAuthService {
         'email': email,
         'userType': userType, // Default user type (e.g., 0: community member)
         'aboutMe': "Get to know me here", // Optional initial value
+        'imageUrl': "https://picsum.photos/id/1004/960/540"
       });
 
       if (!context.mounted) {
@@ -43,6 +44,7 @@ class FirebaseAuthService {
         email: email,
         userType: userType,
         aboutMe: "Get to know me here", // Assuming you meant 'aboutMe' as 'userBio'
+        imageUrl: "https://picsum.photos/id/1004/960/540",
       );
     } catch (e) {
       print(e);
@@ -141,7 +143,7 @@ class FirebaseAuthService {
   }
 
   // Update user details
-  Future<bool> updateUserDetails({String? name, String? email, String? userType, String? aboutMe}) async {
+  Future<bool> updateUserDetails({String? name, String? email, String? userType, String? aboutMe, String? imageUrl}) async {
     try {
       User? currentUser = _auth.currentUser;
       if (currentUser == null) {
@@ -154,6 +156,7 @@ class FirebaseAuthService {
       if (email != null) updatedData['email'] = email;
       if (userType != null) updatedData['userType'] = userType.toString(); // Ensure userType is stored correctly
       if (aboutMe != null) updatedData['aboutMe'] = aboutMe;
+      if (imageUrl!=null) updatedData['imageUrl'] = imageUrl;
 
       if (updatedData.isNotEmpty) {
         await _firestore.collection('users').doc(currentUser.uid).update(updatedData);
@@ -164,6 +167,8 @@ class FirebaseAuthService {
       return false;
     }
   }
+
+
 
   // Fetch user details
   Future<AppUser?> fetchUserDetails() async {

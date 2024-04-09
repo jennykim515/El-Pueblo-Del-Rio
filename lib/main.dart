@@ -39,16 +39,20 @@ class MyApp extends StatelessWidget {
 
         ),
         textTheme: TextTheme(
-          titleMedium: GoogleFonts.alice(color: policeBlue,fontSize: 20, ), // for body text
-          titleLarge: GoogleFonts.alice(color: Colors.orange, fontSize:23, fontWeight: FontWeight.normal),
-          bodyLarge: TextStyle(color: Colors.orange, fontSize:15, fontWeight: FontWeight.normal), // for app bar title
-          labelSmall: TextStyle(color: Colors.orange, fontSize:12, fontWeight: FontWeight.normal), // for app bar title
+          titleMedium: GoogleFonts.openSans(color: policeBlue,fontSize: 20,fontWeight: FontWeight.bold ), // for body text
+          titleLarge: GoogleFonts.openSans(color: policeBlue, fontSize:23, fontWeight: FontWeight.bold),
+          bodyLarge: TextStyle(color: Colors.black45, fontSize:15, fontWeight: FontWeight.normal), // for app bar title
+          labelSmall: TextStyle(color: Colors.black54, fontSize:12, fontWeight: FontWeight.normal), // for app bar title
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all<Color>(policeBlue),
             foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
           ),
+        ),
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor: policeBlue,
+          foregroundColor: Colors.white,
         ),
         iconTheme: IconThemeData(
           color: policeBlue,
