@@ -32,7 +32,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       _user = user;
       _nameController.text = _user?.name ?? '';
       _emailController.text = _user?.email ?? '';
-      _bioController.text = _user?.userBio ?? '';
+      _bioController.text = _user?.aboutMe ?? '';
 
     });
   }
@@ -110,7 +110,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       setState(() {
         _user?.name = newName;
         _user?.email = newEmail;
-        _user?.userBio = newBio;
+        _user?.aboutMe = newBio;
       });
     } catch (error) {
       // Handle errors, e.g., show an error dialog

@@ -42,7 +42,7 @@ class FirebaseAuthService {
         name: name,
         email: email,
         userType: userType,
-        userBio: "Get to know me here", // Assuming you meant 'aboutMe' as 'userBio'
+        aboutMe: "Get to know me here", // Assuming you meant 'aboutMe' as 'userBio'
       );
     } catch (e) {
       print(e);

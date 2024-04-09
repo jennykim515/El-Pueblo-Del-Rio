@@ -54,6 +54,7 @@ class DefaultFirebaseOptions {
     authDomain: 'cs401-3e77f.firebaseapp.com',
     storageBucket: 'cs401-3e77f.appspot.com',
     measurementId: 'G-DNMPN95LNJ',
+    databaseURL: "https://cs401-3e77f-default-rtdb.firebaseio.com",
   );
 
   static const FirebaseOptions android = FirebaseOptions(

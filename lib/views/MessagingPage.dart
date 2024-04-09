@@ -104,7 +104,7 @@ class _MessagingPageState extends State<MessagingPage> {
         _textController.clear(); // clear the text input field
       });
 
-      DatabaseReference messagesRef = FirebaseDatabase.instance.reference().child('messages').child('conversationId'); // Replace 'conversationId' with the actual conversation ID
+      DatabaseReference messagesRef = FirebaseDatabase.instance.ref().child('messages').child('conversationId'); // Replace 'conversationId' with the actual conversation ID
       messagesRef.push().set({
         'senderId': 'user', // Assuming the sender is always the current user
         'text': text,
@@ -115,7 +115,7 @@ class _MessagingPageState extends State<MessagingPage> {
 
   // FIXME: not receiving correctly
   void listenForMessages(void Function(Map<String, dynamic>) onNewMessage) {
-    DatabaseReference messagesRef = FirebaseDatabase.instance.reference().child('messages').child('conversationId'); // Replace 'conversationId' with the actual conversation ID
+    DatabaseReference messagesRef = FirebaseDatabase.instance.ref().child('messages').child('conversationId'); // Replace 'conversationId' with the actual conversation ID
     messagesRef.onChildAdded.listen((event) {
       Map<String, dynamic> messageData = event.snapshot.value as Map<String, dynamic>;
       onNewMessage(messageData);

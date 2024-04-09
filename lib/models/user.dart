@@ -4,7 +4,7 @@ class AppUser {
   String? passwordHash;
   String? name;
   String? email;
-  String? userBio;
+  String? aboutMe;
   String? userType;
 
   AppUser({
@@ -14,7 +14,7 @@ class AppUser {
     this.name,
     this.email,
     this.userType,
-    this.userBio,
+    this.aboutMe,
   });
 
   // Updated to include an 'id' parameter
@@ -26,7 +26,7 @@ class AppUser {
       name: json['name'],
       email: json['email'],
       userType: json['userType'],
-      userBio: json['userBio'],
+      aboutMe: json['aboutMe'],
     );
   }
 
@@ -38,7 +38,7 @@ class AppUser {
       'name': name,
       'email': email,
       'userType': userType,
-      'userBio': userBio,
+      'aboutMe': aboutMe,
     };
   }
 }
