@@ -1,16 +1,14 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pueblo_del_rio/views/UserTypeDropdown.dart';
 import 'package:pueblo_del_rio/views/forgotPasswordPage.dart';
 
 import '../controllers/firebaseAuthService.dart';
-import '../models/user.dart';
 import '../nav/mainButton.dart';
 import '../nav/MyTextField.dart';
 import 'login.dart';
 
 class RegisterPage extends StatefulWidget {
-  RegisterPage({super.key});
+  const RegisterPage({super.key});
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -153,7 +151,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     TextButton(
                       onPressed: () {
                         // Navigate to the register page
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginPage()));
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const LoginPage()));
                       },
                       child: const Text(
                         "Already have an account? Login here ",

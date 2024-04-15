@@ -1,14 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pueblo_del_rio/views/MessagingPage.dart';
-import 'package:pueblo_del_rio/views/ResourcesPage.dart';
 import 'package:pueblo_del_rio/views/authPage.dart';
-import 'package:pueblo_del_rio/views/homePage.dart';
-import 'package:pueblo_del_rio/views/login.dart';
-import 'package:pueblo_del_rio/views/splash.dart';
-import 'package:pueblo_del_rio/controllers/firebaseAuthService.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -18,12 +11,12 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp( MyApp());
+  runApp( const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final Color policeBlue = Color(0xFF2F3A69);
-  MyApp({super.key});
+  final Color policeBlue = const Color(0xFF2F3A69);
+  const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
@@ -41,8 +34,8 @@ class MyApp extends StatelessWidget {
         textTheme: TextTheme(
           titleMedium: GoogleFonts.openSans(color: policeBlue,fontSize: 20,fontWeight: FontWeight.bold ), // for body text
           titleLarge: GoogleFonts.openSans(color: policeBlue, fontSize:23, fontWeight: FontWeight.bold),
-          bodyLarge: TextStyle(color: Colors.black45, fontSize:15, fontWeight: FontWeight.normal), // for app bar title
-          labelSmall: TextStyle(color: Colors.black54, fontSize:12, fontWeight: FontWeight.normal), // for app bar title
+          bodyLarge: const TextStyle(color: Colors.black45, fontSize:15, fontWeight: FontWeight.normal), // for app bar title
+          labelSmall: const TextStyle(color: Colors.black54, fontSize:12, fontWeight: FontWeight.normal), // for app bar title
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(

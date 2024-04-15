@@ -1,16 +1,15 @@
-import 'dart:convert';
 import 'dart:html' as html;
 
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart'; // Import Firebase Storage
-import 'package:cloud_firestore/cloud_firestore.dart'; // Import Cloud Firestore
+// Import Cloud Firestore
 import 'package:pueblo_del_rio/controllers/firebaseAuthService.dart';
 import 'package:pueblo_del_rio/controllers/postController.dart';
 import 'package:pueblo_del_rio/models/user.dart';
 import 'package:uuid/uuid.dart'; // For generating unique file names
 
 class CreatePost extends StatefulWidget {
-  const CreatePost({Key? key}) : super(key: key);
+  const CreatePost({super.key});
 
   @override
   _CreatePostState createState() => _CreatePostState();
@@ -67,27 +66,27 @@ class _CreatePostState extends State<CreatePost> {
             children: [
               TextField(
                 controller: _titleController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Title',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextField(
                 controller: _bodyController,
                 maxLines: null,
                 keyboardType: TextInputType.multiline,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Body',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: _getImage,
-                child: Text('Upload Image'),
+                child: const Text('Upload Image'),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               imageUrl != null
                   ? Image.network(
                       imageUrl!,
@@ -108,9 +107,9 @@ class _CreatePostState extends State<CreatePost> {
     context: context,
     barrierDismissible: false, // User must not dismiss the dialog by tapping outside of it.
     builder: (BuildContext context) {
-      return Dialog(
+      return const Dialog(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: EdgeInsets.all(20.0),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -153,12 +152,12 @@ class _CreatePostState extends State<CreatePost> {
       showDialog(
         context: context,
         builder: (BuildContext context) => AlertDialog(
-          title: Text('Error'),
+          title: const Text('Error'),
           content: Text(title.isEmpty ? 'Please enter a title.' : body.isEmpty ? 'Please enter a body for your post.' : 'Please upload an image.'),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         ),
@@ -171,7 +170,7 @@ class _CreatePostState extends State<CreatePost> {
     if (user != null && user!.id != null) {
       try {
         // Upload the image to Firebase Storage
-        String filePath = 'uploads/${Uuid().v4()}.png';
+        String filePath = 'uploads/${const Uuid().v4()}.png';
         final ref = FirebaseStorage.instance.ref().child(filePath);
         final task = await ref.putBlob(_selectedFile!);
         final downloadUrl = await task.ref.getDownloadURL();

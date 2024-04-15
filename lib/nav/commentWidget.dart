@@ -7,9 +7,9 @@ class CommentWidget extends StatefulWidget {
   final String postID;
 
   const CommentWidget({
-    Key? key,
+    super.key,
     required this.postID,
-  }) : super(key: key);
+  });
 
   @override
   _CommentWidgetState createState() => _CommentWidgetState();
@@ -30,12 +30,12 @@ class _CommentWidgetState extends State<CommentWidget> {
       future: _commentsFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return const CircularProgressIndicator();
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
           final comments = snapshot.data ?? [];
-          print("these are the comments: " + comments.toString());
+          print("these are the comments: $comments");
           return _showCommentDialog(context, comments);
         }
       },
@@ -44,8 +44,8 @@ class _CommentWidgetState extends State<CommentWidget> {
 
   Widget _showCommentDialog(BuildContext context, List<Comment> comments) {
     return AlertDialog(
-      title: Text('Comments'),
-      content: Container(
+      title: const Text('Comments'),
+      content: SizedBox(
         width: double.maxFinite,
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -60,7 +60,7 @@ class _CommentWidgetState extends State<CommentWidget> {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return ListTile(
                           title: Text(comments[index].commentStr),
-                          subtitle: Text('By: Loading...'),
+                          subtitle: const Text('By: Loading...'),
                         );
                       } else if (snapshot.hasError) {
                         return ListTile(
@@ -77,12 +77,12 @@ class _CommentWidgetState extends State<CommentWidget> {
                                   children: [
                                     TextSpan(
                                       text: '${snapshot.data}',
-                                      style: TextStyle(fontWeight: FontWeight.bold),
+                                      style: const TextStyle(fontWeight: FontWeight.bold),
                                     ),
                                   ],
                                 ),
                               ),
-                              SizedBox(height: 8), // Add vertical space between title and subtitle
+                              const SizedBox(height: 8), // Add vertical space between title and subtitle
                               Text(comments[index].commentStr),
                             ],
                           ),
@@ -95,7 +95,7 @@ class _CommentWidgetState extends State<CommentWidget> {
               ),
             ),
 
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             CreateComment(postID: widget.postID),
           ],
         ),
@@ -105,7 +105,7 @@ class _CommentWidgetState extends State<CommentWidget> {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: Text('Close'),
+          child: const Text('Close'),
         ),
       ],
     );

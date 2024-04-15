@@ -28,8 +28,8 @@ class FirebaseAuthService {
 
       void successfulRegisterMessage() {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Successfully registered your account'),
+          const SnackBar(
+            content: Text('Successfully registered your account'),
           ),
         );
       }
@@ -57,7 +57,7 @@ class FirebaseAuthService {
               title: Text(e.toString().substring(37)),
               actions: [
                 TextButton(
-                  child: Text("OK"),
+                  child: const Text("OK"),
                   onPressed: () => Navigator.pop(context),
                 )
               ],
@@ -71,7 +71,7 @@ class FirebaseAuthService {
               title: Text(e.toString().substring(30)),
               actions: [
                 TextButton(
-                  child: Text("OK"),
+                  child: const Text("OK"),
                   onPressed: () => Navigator.pop(context),
                 )
               ],
@@ -96,24 +96,24 @@ class FirebaseAuthService {
 
       void wrongPasswordMessage() {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Wrong Password'),
+          const SnackBar(
+            content: Text('Wrong Password'),
           ),
         );
       }
 
       void wrongEmailMessage() {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Wrong Email'),
+          const SnackBar(
+            content: Text('Wrong Email'),
           ),
         );
       }
 
       void invalidEmailMessage() {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Invalid Email'),
+          const SnackBar(
+            content: Text('Invalid Email'),
           ),
         );
       }

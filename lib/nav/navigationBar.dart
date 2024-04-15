@@ -4,7 +4,7 @@ class ReusableBottomNavigationBar extends StatelessWidget {
   final int selectedIndex;
   final Function(int) onItemTapped;
 
-  ReusableBottomNavigationBar({Key? key, required this.selectedIndex, required this.onItemTapped}) : super(key: key);
+  const ReusableBottomNavigationBar({super.key, required this.selectedIndex, required this.onItemTapped});
 
   @override
   Widget build(BuildContext context) {

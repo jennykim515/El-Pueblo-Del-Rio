@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // Import the services library for Clipboard
 
-import '../nav/navigationBar.dart';
 
 class ResourcesPage extends StatelessWidget {
-  const ResourcesPage({Key? key}) : super(key: key);
+  const ResourcesPage({super.key});
 
   @override
   Widget build(BuildContext context) {

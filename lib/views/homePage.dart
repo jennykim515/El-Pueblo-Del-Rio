@@ -4,15 +4,11 @@ import 'package:pueblo_del_rio/controllers/postController.dart';
 import 'package:pueblo_del_rio/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pueblo_del_rio/models/post.dart';
-import 'package:pueblo_del_rio/views/login.dart';
-import '../nav/navigationBar.dart';
 import 'CreatePost.dart';
-import 'PostDetails.dart';
 import 'postWidget.dart'; // Import the PostWidget
-import 'package:google_fonts/google_fonts.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -62,7 +58,7 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   FloatingActionButton(
                     onPressed: signUserOut,
-                    child: Tooltip(
+                    child: const Tooltip(
                       message: 'Sign Out', // Tooltip message to display
                       child: Icon(Icons.logout),
                     ),
@@ -88,7 +84,7 @@ class _HomePageState extends State<HomePage> {
                         setState(() {});
                       });
                     },
-                    child: Icon(Icons.add, color: Colors.white,), // Plus icon
+                    child: const Icon(Icons.add, color: Colors.white,), // Plus icon
 
                   ),
                 ],
@@ -108,7 +104,7 @@ class _HomePageState extends State<HomePage> {
                       : _postController.searchPosts(_searchQuery),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
+                      return const Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
                       return Text('Error: ${snapshot.error}');
                     } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
@@ -119,7 +115,7 @@ class _HomePageState extends State<HomePage> {
                           return Column(
                             children: [
                               PostWidget(post: post),
-                              SizedBox(height: 20), // Adjust the height as needed
+                              const SizedBox(height: 20), // Adjust the height as needed
                             ],
                           );
                         },
@@ -147,11 +143,11 @@ class _HomePageState extends State<HomePage> {
             _searchQuery = value;
           });
         },
-        style: TextStyle(fontSize: 14), // Set the font size of the text
+        style: const TextStyle(fontSize: 14), // Set the font size of the text
         decoration: InputDecoration(
           hintText: 'Search...',
-          hintStyle: TextStyle(fontSize: 14), // Set the font size of the hint text
-          prefixIcon: Icon(Icons.search),
+          hintStyle: const TextStyle(fontSize: 14), // Set the font size of the hint text
+          prefixIcon: const Icon(Icons.search),
           prefixIconColor: Colors.grey,
           fillColor: Colors.white,
           filled: true,

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 
 class AvatarImage extends StatelessWidget {
   final String url;
-  const AvatarImage(this.url, {Key? key}) : super(key: key);
+  const AvatarImage(this.url, {super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pueblo_del_rio/models/user.dart';
 import '../controllers/firebaseAuthService.dart';
 import '../controllers/postController.dart';
@@ -17,8 +16,8 @@ class Comment{
 
   Future<AppUser?> getAuthor() async {
     try {
-      FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
-      return _firebaseAuthService.fetchUserDetailsByID(authorRef);
+      FirebaseAuthService firebaseAuthService = FirebaseAuthService();
+      return firebaseAuthService.fetchUserDetailsByID(authorRef);
     } catch (e) {
       print('Error fetching author details: $e');
       return null;
@@ -28,13 +27,9 @@ class Comment{
   Future<String> getAuthorName() async {
     try {
       final authorName = await PostController().getNameFromRef(authorRef);
-      if (authorName != null) {
-        print("author name : " + authorName);
-        return authorName;
-      } else {
-        throw Exception('Author name is null.');
-      }
-    } catch (e) {
+      print("author name : $authorName");
+      return authorName;
+        } catch (e) {
       // Handle any errors if necessary
       print('Error getting author name: $e');
       rethrow; // Rethrow the error to propagate it further if needed

@@ -8,7 +8,7 @@ import '../nav/mainButton.dart';
 import '../nav/MyTextField.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key? key});
+  const LoginPage({super.key, Key? newKey});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -39,7 +39,7 @@ class _LoginPageState extends State<LoginPage> {
       _auth.signInWithEmailAndPassword(email, password, context);
       // pop the loading circle
       Navigator.pop(context);
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseAuthException {
 
       /*
       // pop the loading circle
@@ -65,23 +65,23 @@ class _LoginPageState extends State<LoginPage> {
 
   void wrongPasswordMessage() {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text('Wrong Password'),
+      const SnackBar(
+        content: Text('Wrong Password'),
       ),
     );
   }
 
   void wrongEmailMessage() {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text('Wrong Email'),
+      const SnackBar(
+        content: Text('Wrong Email'),
       ),
     );
   }
   void wrongCredential() {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text('Wrong Crendential'),
+      const SnackBar(
+        content: Text('Wrong Credential'),
       ),
     );
   }
@@ -197,7 +197,7 @@ class _LoginPageState extends State<LoginPage> {
                   TextButton(
                     onPressed: () {
                       // Navigate to the register page
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => RegisterPage()));
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const RegisterPage()));
                     },
                     child: const Text(
                       "Don't have an account? Register here",

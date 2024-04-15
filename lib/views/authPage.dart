@@ -2,11 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pueblo_del_rio/views/mainScreen.dart';
 
-import 'homePage.dart';
 import 'login.dart';
 
 class AuthPage extends StatelessWidget {
-  const AuthPage({Key? key});
+  const AuthPage({super.key, Key? newKey});
 
   @override
   Widget build(BuildContext context) {
@@ -18,15 +17,15 @@ class AuthPage extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             // Loading state while checking authentication state
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           } else if (snapshot.hasData) {
             // User is logged in
-            return MainScreen();
+            return const MainScreen();
           } else {
             // User is NOT logged in
-            return LoginPage();
+            return const LoginPage();
           }
         },
       ),

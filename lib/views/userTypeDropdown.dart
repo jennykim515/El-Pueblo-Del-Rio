@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class UserTypeDropdown extends StatefulWidget {
   final Function(String?) onSelect; // Callback function
 
-  UserTypeDropdown({Key? key, required this.onSelect}) : super(key: key);
+  const UserTypeDropdown({super.key, required this.onSelect});
 
   @override
   _UserTypeDropdownState createState() => _UserTypeDropdownState();
@@ -20,7 +20,7 @@ class _UserTypeDropdownState extends State<UserTypeDropdown> {
         value: _selectedValue,
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.white),
+            borderSide: const BorderSide(color: Colors.white),
             borderRadius: BorderRadius.circular(20),
           ),
           focusedBorder: OutlineInputBorder(

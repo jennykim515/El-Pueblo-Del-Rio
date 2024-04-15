@@ -7,7 +7,7 @@ import 'package:pueblo_del_rio/controllers/postController.dart';
 class CreateComment extends StatefulWidget {
   final String postID; // Add postID as a required parameter
 
-  const CreateComment({Key? key, required this.postID}) : super(key: key);
+  const CreateComment({super.key, required this.postID});
 
   @override
   _CreateCommentState createState() => _CreateCommentState();
@@ -31,7 +31,7 @@ class _CreateCommentState extends State<CreateComment> {
     });
   }
 
-  TextEditingController _commentController = TextEditingController();
+  final TextEditingController _commentController = TextEditingController();
 
   @override
   void dispose() {
@@ -52,7 +52,7 @@ class _CreateCommentState extends State<CreateComment> {
           Expanded(
             child: TextField(
               controller: _commentController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: 'Write a comment...',
                 border: InputBorder.none,
               ),
@@ -60,7 +60,7 @@ class _CreateCommentState extends State<CreateComment> {
             ),
           ),
           IconButton(
-            icon: Icon(Icons.send),
+            icon: const Icon(Icons.send),
             onPressed: () async {
               if (_commentController.text.isNotEmpty) {
                 // Get the current user ID

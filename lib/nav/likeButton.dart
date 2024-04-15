@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:pueblo_del_rio/controllers/postController.dart';
 
-import '../controllers/postController.dart'; // Import your controller
+// Import your controller
 
 class LikeButtonWidget extends StatefulWidget {
   final String postId;
 
-  LikeButtonWidget({required this.postId});
+  const LikeButtonWidget({super.key, required this.postId});
 
   @override
   _LikeButtonWidgetState createState() => _LikeButtonWidgetState();

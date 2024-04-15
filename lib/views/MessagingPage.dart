@@ -29,7 +29,7 @@ class _MessagingPageState extends State<MessagingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Messaging Page'),
+        title: const Text('Messaging Page'),
       ),
       body: Container(
         decoration: const BoxDecoration(

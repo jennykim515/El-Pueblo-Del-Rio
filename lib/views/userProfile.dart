@@ -1,31 +1,25 @@
-import 'dart:html';
-import 'dart:html';
 import 'dart:html' as html;
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import '../controllers/firebaseAuthService.dart';
 import '../models/user.dart';
-import '../nav/avatarImage.dart';
 import 'package:uuid/uuid.dart'; // For generating unique file names
 
 
 class UserProfileScreen extends StatefulWidget {
-  const UserProfileScreen({Key? key}) : super(key: key);
+  const UserProfileScreen({super.key});
 
   @override
   _UserProfileScreenState createState() => _UserProfileScreenState();
 }
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
-  FirebaseAuthService _authService = FirebaseAuthService();
+  final FirebaseAuthService _authService = FirebaseAuthService();
   AppUser? _user;
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _bioController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _bioController = TextEditingController();
 
   String? imageUrl; //will be set in "getImage"
   html.File? _selectedFile; // Add this line to store the selected file
@@ -53,10 +47,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('User Profile'),
+        title: const Text('User Profile'),
         actions: [
           IconButton(
-            icon: Icon(Icons.save),
+            icon: const Icon(Icons.save),
             onPressed: () {
               _saveChanges();
             },
@@ -71,7 +65,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           ),
         ),
         child: _user != null ? Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -79,34 +73,34 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 backgroundImage: NetworkImage(imageUrl?? "https://picsum.photos/id/1004/960/540"), // You need to replace this with the actual user image
               ),
 
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               ElevatedButton(
                 onPressed: _getImage,
-                child: Text('Upload Image'),
+                child: const Text('Upload Image'),
               ),
-              SizedBox(height:20),
+              const SizedBox(height:20),
               TextField(
                 controller: _nameController,
-                decoration: InputDecoration(labelText: 'Name'),
+                decoration: const InputDecoration(labelText: 'Name'),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextField(
                 controller: _emailController,
-                decoration: InputDecoration(labelText: 'Email'),
+                decoration: const InputDecoration(labelText: 'Email'),
               ),
               TextField(
                 controller: _bioController,
-                decoration: InputDecoration(labelText: 'About me'),
+                decoration: const InputDecoration(labelText: 'About me'),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _saveChanges,
-                child: Text("Save Changes"),
+                child: const Text("Save Changes"),
               ),
             ],
           ),
         )
-            : Center(
+            : const Center(
           child: CircularProgressIndicator(),
         ),
       ),
@@ -124,7 +118,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     // Update the user object locally
     try {
       //UPDATING user details in firebase
-      String filePath = 'uploads/${Uuid().v4()}.png';
+      String filePath = 'uploads/${const Uuid().v4()}.png';
       final ref = FirebaseStorage.instance.ref().child(filePath);
       final task = await ref.putBlob(_selectedFile!);
       final downloadUrl = await task.ref.getDownloadURL();
@@ -153,9 +147,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       context: context,
       barrierDismissible: false, // User must not dismiss the dialog by tapping outside of it.
       builder: (BuildContext context) {
-        return Dialog(
+        return const Dialog(
           child: Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: EdgeInsets.all(20.0),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [

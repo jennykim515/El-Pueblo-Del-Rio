@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pueblo_del_rio/models/user.dart';
 
-import 'comment.dart';
 
 class Post {
   final String id;
@@ -43,7 +42,7 @@ class Post {
   }
 
   Future<AppUser> getAuthor() async {
-    DocumentSnapshot authorDoc = await this.authorRef.get();
+    DocumentSnapshot authorDoc = await authorRef.get();
     // Assuming you have adjusted AppUser.fromJson to include an optional 'id' parameter
     return AppUser.fromJson(authorDoc.data() as Map<String, dynamic>, id: authorDoc.id);
   }
