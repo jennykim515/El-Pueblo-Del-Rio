@@ -4,15 +4,24 @@ import 'package:intl/intl.dart'; // Import the intl package
 import 'package:pueblo_del_rio/models/post.dart';
 import 'package:pueblo_del_rio/models/user.dart';
 import 'package:pueblo_del_rio/nav/commentWidget.dart';
-import 'package:pueblo_del_rio/nav/avatarImage.dart';
-
-
+import '../controllers/firebaseAuthService.dart';
+import '../controllers/postController.dart';
+import 'homePage.dart';
 import '../nav/likeButton.dart';
 
 class PostWidget extends StatelessWidget {
   final Post post;
+  final _postController = PostController();
+  AppUser? user;
+  PostWidget({super.key, required this.post});
 
-  const PostWidget({Key? key, required this.post}) : super(key: key);
+  void initState() {
+    _fetchUserDetails();
+  }
+
+  Future<void> _fetchUserDetails() async {
+    user = await FirebaseAuthService().fetchUserDetails();
+  }
 
   String getDateAsString(DateTime dateTime) {
     if (post.date == null) {
@@ -29,13 +38,40 @@ class PostWidget extends StatelessWidget {
       return '${difference.inHours}h';
     } else if (difference.inDays < 7) {
       return '${difference.inDays}d';
-    }
-    else if (dateTime.year == now.year) {
+    } else if (dateTime.year == now.year) {
       return DateFormat.MMMd().format(post.date!);
-    }
-    else {
+    } else {
       return DateFormat.yMMMd().format(post.date!);
     }
+  }
+
+  void deletePost(BuildContext context, String postId) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+                title: const Text('Delete Post'),
+                content:
+                    const Text('Are you sure you want to delete this post?'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      _postController.deletePost(postId);
+                      Navigator.pop(context);
+
+                      Navigator.pushReplacement( //reload home page to reflect deleted post
+                        context,
+                        MaterialPageRoute(builder: (context) => const HomePage()),
+                      ); //TODO: change to setState(() {});
+                    },
+                    child: const Text('Delete'),
+                  ),
+                ]
+        )
+    );
   }
 
   @override
@@ -52,7 +88,7 @@ class PostWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _AvatarImage("https://picsum.photos/id/1072/80/80"),
+            const _AvatarImage("https://picsum.photos/id/1072/80/80"),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
@@ -63,9 +99,9 @@ class PostWidget extends StatelessWidget {
                     future: post.getAuthor(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CircularProgressIndicator();
+                        return const CircularProgressIndicator();
                       } else if (snapshot.hasError) {
-                        return Text("Error fetching author details");
+                        return const Text("Error fetching author details");
                       } else if (snapshot.hasData) {
                         return Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,38 +113,65 @@ class PostWidget extends StatelessWidget {
                                   children: [
                                     TextSpan(
                                       text: snapshot.data!.name ?? "Unknown",
-                                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.black),
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 12,
+                                          color: Colors.black),
                                     ),
                                     TextSpan(
                                       text: " ${snapshot.data!.userType}",
-                                      style: Theme.of(context).textTheme.labelSmall,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelSmall,
                                     ),
                                   ],
                                 ),
                               ),
                             ),
-                            Text(getDateAsString(post.date!) ?? '', style: Theme.of(context).textTheme.bodyLarge),
-                            const Padding(
-                              padding: EdgeInsets.only(left: 8.0),
-                              child: Icon(Icons.more_horiz),
+                            Text(getDateAsString(post.date!) ?? '',
+                                style: Theme.of(context).textTheme.bodyLarge),
+                            // TODO: make it so only I can delete
+                            PopupMenuButton<String>(
+                              child: const Icon(
+                                Icons.more_horiz,
+                              ),
+                              onSelected: (value) {
+                                if (value == 'delete') {
+                                  print(post.authorRef);
+                                  print(user?.id);
+                                  if (post.getAuthor() == user) {
+                                    deletePost(context, post.id);
+                                  }
+                                  else {
+                                    //error popup
+                                  }
+                                }
+                              },
+                              itemBuilder: (BuildContext context) =>
+                                  <PopupMenuEntry<String>>[
+                                const PopupMenuItem<String>(
+                                  value: 'delete',
+                                  child: Text('Delete'),
+                                ),
+                              ],
                             ),
                           ],
                         );
                       } else {
-                        return Text("Author not found");
+                        return const Text("Author not found");
                       }
                     },
                   ),
                   Text(
                     post.title, // Display the post's title
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
                       color: Colors.black,
                     ),
                   ),
                   const SizedBox(height: 8), // Space between title and body
-                  if (post.body != null) Text(post.body!),
+                  Text(post.body),
                   if (post.imageUrl != null)
                     Container(
                       height: 200,
@@ -127,7 +190,6 @@ class PostWidget extends StatelessWidget {
             ),
           ],
         ),
-
       ),
     );
 
@@ -149,7 +211,8 @@ class PostWidget extends StatelessWidget {
 
 class _AvatarImage extends StatelessWidget {
   final String url;
-  const _AvatarImage(this.url, {Key? key}) : super(key: key);
+
+  const _AvatarImage(this.url);
 
   @override
   Widget build(BuildContext context) {
@@ -165,7 +228,8 @@ class _AvatarImage extends StatelessWidget {
 
 class _ActionsRow extends StatelessWidget {
   final Post item;
-  const _ActionsRow({Key? key, required this.item}) : super(key: key);
+
+  const _ActionsRow({required this.item});
 
   @override
   Widget build(BuildContext context) {
@@ -193,7 +257,7 @@ class _ActionsRow extends StatelessWidget {
           LikeButtonWidget(postId: item.id),
           IconButton(
             onPressed: () {},
-            icon: Tooltip(
+            icon: const Tooltip(
               message: 'Share', // Tooltip message to display
               child: Icon(CupertinoIcons.share_up),
             ),
