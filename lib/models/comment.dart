@@ -7,11 +7,13 @@ class Comment{
   final String id; //post id
   final String commentStr;
   final String authorRef;
+  final DateTime? date;
 
   Comment({
     required this.id,
     required this.commentStr,
     required this.authorRef,
+    this.date,
   });
 
   Future<AppUser?> getAuthor() async {
@@ -41,6 +43,7 @@ class Comment{
       'id': id,
       'commentStr': commentStr,
       'authorRef': authorRef,
+      'date': date,
     };
   }
 

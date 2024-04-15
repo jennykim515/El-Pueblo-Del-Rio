@@ -128,8 +128,10 @@ class PostWidget extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            Text(getDateAsString(post.date!) ?? '',
-                                style: Theme.of(context).textTheme.bodyLarge),
+                            Tooltip(
+                              message: DateFormat.yMMMMEEEEd().addPattern("'at'").add_jm().format(post.date!),
+                              child: Text(getDateAsString(post.date!) ?? '', style: Theme.of(context).textTheme.bodyLarge),
+                            ),
                             // TODO: make it so only I can delete
                             PopupMenuButton<String>(
                               child: const Icon(

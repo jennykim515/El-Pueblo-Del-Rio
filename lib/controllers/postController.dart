@@ -15,7 +15,7 @@ class PostController {
           .orderBy('date', descending: true)
           .get();
       List<Post> posts =
-          snapshot.docs.map((doc) => Post.fromFirestore(doc)).toList();
+      snapshot.docs.map((doc) => Post.fromFirestore(doc)).toList();
       print(posts);
 
       return posts;
@@ -28,7 +28,7 @@ class PostController {
   Future<String> getNameFromRef(String UserID) async {
     try {
       DocumentSnapshot<Map<String, dynamic>> postSnapshot =
-          await _firestore.collection('users').doc(UserID).get();
+      await _firestore.collection('users').doc(UserID).get();
 
       if (postSnapshot.exists) {
         return postSnapshot.data()?['name'];
@@ -45,7 +45,7 @@ class PostController {
     try {
       print(postID);
       DocumentSnapshot<Map<String, dynamic>> postSnapshot =
-          await _firestore.collection('posts').doc(postID).get();
+      await _firestore.collection('posts').doc(postID).get();
       // Check if the post exists
       if (postSnapshot.exists) {
         // Access the comments array from the post document
@@ -57,6 +57,7 @@ class PostController {
             authorRef: comment['authorRef'],
             commentStr: comment['commentStr'],
             id: comment['id'],
+            date: comment['date']?.toDate(),
           );
         }).toList();
 
@@ -129,7 +130,7 @@ class PostController {
     try {
       // Directly use the UID to create a reference to the user's document in the 'users' collection
       DocumentReference userRef =
-          FirebaseFirestore.instance.collection('users').doc(userId);
+      FirebaseFirestore.instance.collection('users').doc(userId);
 
       Map<String, dynamic> postData = {
         'title': title,
@@ -178,7 +179,7 @@ class PostController {
   Future<int> getLikesCountForPost(String postId) async {
     try {
       DocumentSnapshot<Map<String, dynamic>> postSnapshot =
-          await _firestore.collection('posts').doc(postId).get();
+      await _firestore.collection('posts').doc(postId).get();
 
       if (postSnapshot.exists) {
         print("getLikesCountForPost");

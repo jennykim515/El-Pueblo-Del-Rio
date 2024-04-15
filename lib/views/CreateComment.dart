@@ -68,6 +68,7 @@ class _CreateCommentState extends State<CreateComment> {
                   commentStr: _commentController.text,
                   authorRef: user!.id!,
                   id: widget.postID,
+                  date: DateTime.now(),
                 );
                 await _postController.createNewComment(newComment, widget.postID);
                 setState(() {

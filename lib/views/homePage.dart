@@ -4,8 +4,12 @@ import 'package:pueblo_del_rio/controllers/postController.dart';
 import 'package:pueblo_del_rio/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pueblo_del_rio/models/post.dart';
+import 'package:pueblo_del_rio/views/login.dart';
+import '../nav/navigationBar.dart';
 import 'CreatePost.dart';
+import 'PostDetails.dart';
 import 'postWidget.dart'; // Import the PostWidget
+import 'package:google_fonts/google_fonts.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -84,8 +88,11 @@ class _HomePageState extends State<HomePage> {
                         setState(() {});
                       });
                     },
-                    child: const Icon(Icons.add, color: Colors.white,), // Plus icon
-
+                    child: Tooltip(
+                      message: 'Create Post', // Tooltip message to display
+                      child: Icon(Icons.add, color: Colors.white,),
+                      // Plus icon
+                    )
                   ),
                 ],
               ),
