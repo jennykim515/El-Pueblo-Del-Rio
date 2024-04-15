@@ -20,8 +20,14 @@ class _CommentWidgetState extends State<CommentWidget> {
 
   @override
   void initState() {
-    _commentsFuture = PostController().getAllComments(widget.postID);
     super.initState();
+    _loadComments();
+  }
+
+  void _loadComments() {
+    setState(() {
+      _commentsFuture = PostController().getAllComments(widget.postID);
+    });
   }
 
   @override
@@ -96,7 +102,10 @@ class _CommentWidgetState extends State<CommentWidget> {
             ),
 
             SizedBox(height: 16),
-            CreateComment(postID: widget.postID),
+            CreateComment(
+              postID: widget.postID,
+              onCommentAdded: _loadComments,
+            ),
           ],
         ),
       ),
