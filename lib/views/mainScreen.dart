@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pueblo_del_rio/nav/navigationBar.dart';
+import 'package:pueblo_del_rio/views/Chats.dart';
 import 'package:pueblo_del_rio/views/MessagingPage.dart';
 import 'package:pueblo_del_rio/views/ResourcesPage.dart';
 import 'package:pueblo_del_rio/views/homePage.dart';
@@ -15,7 +16,7 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Widget> _pages = [
     const HomePage(),
-    const MessagingPage(),
+    ChatPage(),
     const ResourcesPage(),
     const UserProfileScreen(),
   ];

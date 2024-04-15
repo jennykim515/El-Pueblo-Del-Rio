@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class AppUser {
   String? id;
   String? username;
@@ -19,6 +21,21 @@ class AppUser {
     this.aboutMe,
     this.imageUrl
   });
+
+  factory AppUser.fromFirestore(DocumentSnapshot doc) {
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    return AppUser(
+      id: doc.id,
+      username: data['username'],
+      passwordHash: data['passwordHash'],
+      name: data['name'],
+      email: data['email'],
+      userType: data['userType'],
+      aboutMe: data['aboutMe'],
+      imageUrl: data['imageUrl'],
+    );
+  }
+
 
   // Updated to include an 'id' parameter
   factory AppUser.fromJson(Map<String, dynamic> json, {String? id}) {

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import '../models/message.dart';
+import 'Chats.dart'; // Import the ChatRoom model
 
 class MessagingPage extends StatefulWidget {
-  const MessagingPage({super.key});
+  final ChatRoom chatRoom; // Define a field to store the chat room
+
+  const MessagingPage({Key? key, required this.chatRoom}) : super(key: key); // Update constructor to accept chatRoom
 
   @override
   _MessagingPageState createState() => _MessagingPageState();
@@ -12,24 +15,21 @@ class MessagingPage extends StatefulWidget {
 class _MessagingPageState extends State<MessagingPage> {
   final List<Message> _messages = []; // List to hold chat messages
   final TextEditingController _textController = TextEditingController();
+  final DatabaseReference _messagesRef = FirebaseDatabase.instance.reference().child('messages');
 
   @override
   void initState() {
     super.initState();
 
-    // listen for new messages
-    listenForMessages((messageData) {
-      setState(() {
-        _messages.add(Message.fromJson(messageData));
-      });
-    });
+    // Listen for new messages in the specified chat room
+    listenForMessages();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Messaging Page'),
+        title: Text(widget.chatRoom.participants[0].name ?? 'Unknown'),
       ),
       body: Container(
         decoration: const BoxDecoration(
@@ -96,29 +96,34 @@ class _MessagingPageState extends State<MessagingPage> {
     );
   }
 
-  // FIXME: not uploading correctly
   void _sendMessage(String text) {
     if (text.isNotEmpty) {
       setState(() {
-        _messages.add(Message(senderId: 'user', text: text, timestamp: DateTime.now().millisecondsSinceEpoch)); // Add the user's message to the list of messages
-        _textController.clear(); // clear the text input field
+        // Add the user's message to the list of messages
+        _messages.add(Message(senderId: 'user', text: text, timestamp: DateTime.now().millisecondsSinceEpoch));
+        _textController.clear(); // Clear the text input field
       });
 
-      DatabaseReference messagesRef = FirebaseDatabase.instance.ref().child('messages').child('conversationId'); // Replace 'conversationId' with the actual conversation ID
+      // Store the message in the specific chat room in Firebase Database
+      DatabaseReference messagesRef = FirebaseDatabase.instance.reference().child('chatRooms').child(widget.chatRoom.roomId).child('messages');
       messagesRef.push().set({
-        'senderId': 'user', // Assuming the sender is always the current user
+        'senderId': 'user',
         'text': text,
         'timestamp': DateTime.now().millisecondsSinceEpoch,
       });
     }
   }
 
-  // FIXME: not receiving correctly
-  void listenForMessages(void Function(Map<String, dynamic>) onNewMessage) {
-    DatabaseReference messagesRef = FirebaseDatabase.instance.ref().child('messages').child('conversationId'); // Replace 'conversationId' with the actual conversation ID
+
+  void listenForMessages() {
+    DatabaseReference messagesRef = FirebaseDatabase.instance.reference().child('chatRooms').child(widget.chatRoom.roomId).child('messages');
     messagesRef.onChildAdded.listen((event) {
       Map<String, dynamic> messageData = event.snapshot.value as Map<String, dynamic>;
-      onNewMessage(messageData);
+      setState(() {
+        // Add the received message to the list of messages
+        _messages.add(Message.fromJson(messageData));
+      });
     });
   }
+
 }
