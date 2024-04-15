@@ -12,13 +12,13 @@ import '../nav/likeButton.dart';
 class PostWidget extends StatelessWidget {
   final Post post;
   final _postController = PostController();
-  AppUser? user;
   PostWidget({super.key, required this.post});
 
   void initState() {
     _fetchUserDetails();
   }
 
+  AppUser? user;
   Future<void> _fetchUserDetails() async {
     user = await FirebaseAuthService().fetchUserDetails();
   }
@@ -137,14 +137,14 @@ class PostWidget extends StatelessWidget {
                               ),
                               onSelected: (value) {
                                 if (value == 'delete') {
-                                  print(post.authorRef);
-                                  print(user?.id);
-                                  if (post.getAuthor() == user) {
+                                  // print(post.authorRef);
+                                  // print(user?.id);
+                                  // if (post.getAuthor() == user) {
                                     deletePost(context, post.id);
-                                  }
-                                  else {
-                                    //error popup
-                                  }
+                                  // }
+                                  // else {
+                                  //   //error popup
+                                  // }
                                 }
                               },
                               itemBuilder: (BuildContext context) =>
