@@ -20,8 +20,14 @@ class _CommentWidgetState extends State<CommentWidget> {
 
   @override
   void initState() {
-    _commentsFuture = PostController().getAllComments(widget.postID);
     super.initState();
+    _loadComments();
+  }
+
+  void _loadComments() {
+    setState(() {
+      _commentsFuture = PostController().getAllComments(widget.postID);
+    });
   }
 
   @override
@@ -35,7 +41,7 @@ class _CommentWidgetState extends State<CommentWidget> {
           return Text('Error: ${snapshot.error}');
         } else {
           final comments = snapshot.data ?? [];
-          print("these are the comments: $comments");
+          print("these are the comments: " + comments.toString());
           return _showCommentDialog(context, comments);
         }
       },
@@ -44,8 +50,8 @@ class _CommentWidgetState extends State<CommentWidget> {
 
   Widget _showCommentDialog(BuildContext context, List<Comment> comments) {
     return AlertDialog(
-      title: const Text('Comments'),
-      content: SizedBox(
+      title: Text('Comments'),
+      content: Container(
         width: double.maxFinite,
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -95,8 +101,11 @@ class _CommentWidgetState extends State<CommentWidget> {
               ),
             ),
 
-            const SizedBox(height: 16),
-            CreateComment(postID: widget.postID),
+            SizedBox(height: 16),
+            CreateComment(
+              postID: widget.postID,
+              onCommentAdded: _loadComments,
+            ),
           ],
         ),
       ),

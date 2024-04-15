@@ -6,8 +6,9 @@ import 'package:pueblo_del_rio/controllers/postController.dart';
 
 class CreateComment extends StatefulWidget {
   final String postID; // Add postID as a required parameter
+  final VoidCallback onCommentAdded;
 
-  const CreateComment({super.key, required this.postID});
+  const CreateComment({Key? key, required this.postID, required this.onCommentAdded}) : super(key: key);
 
   @override
   _CreateCommentState createState() => _CreateCommentState();
@@ -62,25 +63,19 @@ class _CreateCommentState extends State<CreateComment> {
           IconButton(
             icon: const Icon(Icons.send),
             onPressed: () async {
-              if (_commentController.text.isNotEmpty) {
-                // Get the current user ID
-                if (user != null) {
-                  // Create a new Comment object
-                  Comment newComment = Comment(
-                    commentStr: _commentController.text,
-                    authorRef: user!.id!,
-                    id: widget.postID,
-                  );
-                  // Add the new comment to the comments list
-                  await _postController.createNewComment(newComment, widget.postID);
-                  setState(() {
-                    // Update the UI if necessary
-                    _commentController.clear();
+              if (_commentController.text.isNotEmpty && user != null) {
+                Comment newComment = Comment(
+                  commentStr: _commentController.text,
+                  authorRef: user!.id!,
+                  id: widget.postID,
+                );
+                await _postController.createNewComment(newComment, widget.postID);
+                setState(() {
+                  _commentController.clear();
+                });
 
-                  });
-                }
+                widget.onCommentAdded(); // Trigger callback
               }
-              Navigator.pop(context); // Close comment dialog after posting
             },
           ),
         ],
