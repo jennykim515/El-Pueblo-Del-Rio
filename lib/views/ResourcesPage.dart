@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; // Import the services library for Clipboard
+import 'package:url_launcher/url_launcher.dart';
 
 
 class ResourcesPage extends StatelessWidget {
@@ -35,9 +35,9 @@ class ResourcesPage extends StatelessWidget {
             return Card(
               child: ListTile(
                 title: Text(resource['title']!), // Access the title from the map
-                subtitle: const Text('Click to Copy'),
+                subtitle: const Text('Click to Open'),
                 onTap: () {
-                  _copyToClipboard(resource['link']!, context);
+                  _openLink(resource['link']!);
                 },
               ),
             );
@@ -47,13 +47,13 @@ class ResourcesPage extends StatelessWidget {
     );
   }
 
-  void _copyToClipboard(String text, BuildContext context) {
-    Clipboard.setData(ClipboardData(text: text));
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Copied link to clipboard'),
-        duration: Duration(seconds: 1),
-      ),
-    );
+  void _openLink(String link) async {
+    final Uri url = Uri.parse(link);
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      throw 'Could not launch $link';
+    }
   }
 }
+
