@@ -8,7 +8,7 @@ class CreateComment extends StatefulWidget {
   final String postID; // Add postID as a required parameter
   final VoidCallback onCommentAdded;
 
-  const CreateComment({Key? key, required this.postID, required this.onCommentAdded}) : super(key: key);
+  const CreateComment({super.key, required this.postID, required this.onCommentAdded});
 
   @override
   _CreateCommentState createState() => _CreateCommentState();

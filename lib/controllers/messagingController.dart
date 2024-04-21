@@ -1,8 +1,5 @@
-import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:pueblo_del_rio/models/comment.dart';
 import 'package:pueblo_del_rio/models/post.dart';
 import 'package:pueblo_del_rio/models/user.dart';
 

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:pueblo_del_rio/controllers/firebaseAuthService.dart';
 import '../controllers/messagingController.dart';
 import '../models/user.dart';
@@ -13,6 +12,8 @@ class ChatRoom {
 }
 
 class ChatPage extends StatefulWidget {
+  const ChatPage({super.key});
+
   @override
   _ChatPageState createState() => _ChatPageState();
 }
@@ -47,7 +48,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Chat Rooms'),
+        title: const Text('Chat Rooms'),
       ),
       body: ListView.builder(
         itemCount: chatRooms.length,

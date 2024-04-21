@@ -6,7 +6,7 @@ import 'Chats.dart'; // Import the ChatRoom model
 class MessagingPage extends StatefulWidget {
   final ChatRoom chatRoom; // Define a field to store the chat room
 
-  const MessagingPage({Key? key, required this.chatRoom}) : super(key: key); // Update constructor to accept chatRoom
+  const MessagingPage({super.key, required this.chatRoom}); // Update constructor to accept chatRoom
 
   @override
   _MessagingPageState createState() => _MessagingPageState();

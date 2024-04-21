@@ -3,7 +3,18 @@ import 'package:flutter/services.dart'; // Import the services library for Clipb
 
 
 class ResourcesPage extends StatelessWidget {
-  const ResourcesPage({super.key});
+  ResourcesPage({super.key});
+
+  // Define a list of maps where each map contains the title and link of a resource
+  final List<Map<String, String>> resources = [
+    {'title': 'LAPD Community Safety Partnership', 'link': 'https://www.lapdcsp.org/'},
+    {'title': 'Housing Authority of the City of Los Angeles', 'link': 'https://www.hacla.org/en'},
+    {'title': 'Los Angeles Department of Recreation and Parks', 'link': 'https://www.laparks.org/'},
+    {'title': 'Los Angeles County Library', 'link': 'https://lacountylibrary.org/'},
+    {'title': 'City of Los Angeles Government', 'link': 'https://lacity.gov/government'},
+    {'title': 'Los Angeles County Department of Mental Health', 'link': 'https://dmh.lacounty.gov/'},
+    {'title': 'California Department of Healthcare Services', 'link': 'https://www.ca-med.org/'},
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -20,27 +31,17 @@ class ResourcesPage extends StatelessWidget {
         ),
         child: ListView(
           padding: const EdgeInsets.all(16.0),
-          children: [
-            Card(
+          children: resources.map((resource) {
+            return Card(
               child: ListTile(
-                title: const Text('Resource 1'),
-                subtitle: const Text('Link of Resource 1. Click to Copy'),
+                title: Text(resource['title']!), // Access the title from the map
+                subtitle: const Text('Click to Copy'),
                 onTap: () {
-                  _copyToClipboard('Link of Resource 2. Click to Copy', context);
+                  _copyToClipboard(resource['link']!, context);
                 },
               ),
-            ),
-            Card(
-              child: ListTile(
-                title: const Text('Resource 2'),
-                subtitle: const Text('Link of Resource 2. Click to Copy'),
-                onTap: () {
-                  _copyToClipboard('Link of Resource 2. Click to Copy', context);
-                },
-              ),
-            ),
-            // Add more Card widgets for additional resources
-          ],
+            );
+          }).toList(),
         ),
       ),
     );

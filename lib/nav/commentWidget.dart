@@ -42,7 +42,7 @@ class _CommentWidgetState extends State<CommentWidget> {
           return Text('Error: ${snapshot.error}');
         } else {
           final comments = snapshot.data ?? [];
-          print("these are the comments: " + comments.toString());
+          print("these are the comments: $comments");
           return _showCommentDialog(context, comments);
         }
       },
@@ -51,8 +51,8 @@ class _CommentWidgetState extends State<CommentWidget> {
 
   Widget _showCommentDialog(BuildContext context, List<Comment> comments) {
     return AlertDialog(
-      title: Text('Comments'),
-      content: Container(
+      title: const Text('Comments'),
+      content: SizedBox(
         width: double.maxFinite,
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -108,17 +108,17 @@ class _CommentWidgetState extends State<CommentWidget> {
                                       children: [
                                         TextSpan(
                                           text: '${snapshot.data}',
-                                          style: TextStyle(fontWeight: FontWeight.bold),
+                                          style: const TextStyle(fontWeight: FontWeight.bold),
                                         ),
                                         TextSpan(
                                           text: ' • ${getDateAsString(comments[index].date!)}',
-                                          style: TextStyle(color: Colors.grey),
+                                          style: const TextStyle(color: Colors.grey),
                                         ),
                                       ],
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: 8), // Add vertical space between title and subtitle
+                                const SizedBox(height: 8), // Add vertical space between title and subtitle
                                 Text(comments[index].commentStr),
                               ],
                             ),
@@ -152,7 +152,7 @@ class _CommentWidgetState extends State<CommentWidget> {
               ),
             ),
 
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             CreateComment(
               postID: widget.postID,
               onCommentAdded: _loadComments,
