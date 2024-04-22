@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:intl/intl.dart';
 import '../controllers/firebaseAuthService.dart';
 import '../models/message.dart';
 import 'package:pueblo_del_rio/models/user.dart';
@@ -8,7 +9,9 @@ import 'Chats.dart'; // Import the ChatRoom model
 class MessagingPage extends StatefulWidget {
   final ChatRoom chatRoom; // Define a field to store the chat room
 
-  const MessagingPage({super.key, required this.chatRoom}); // Update constructor to accept chatRoom
+  const MessagingPage(
+      {super.key,
+      required this.chatRoom}); // Update constructor to accept chatRoom
 
   @override
   _MessagingPageState createState() => _MessagingPageState();
@@ -84,22 +87,42 @@ class _MessagingPageState extends State<MessagingPage> {
   }
 
   Widget _buildMessageBubble(Message message) {
+    String formattedTimestamp = DateFormat('HH:mm')
+        .format(DateTime.fromMillisecondsSinceEpoch(message.timestamp));
     return Align(
-      alignment: message.senderId == user?.id ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-        padding: const EdgeInsets.all(12.0),
-        decoration: BoxDecoration(
-          color: message.senderId == user?.id ? Colors.blue : Colors.grey[300],
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        child: Text(
-          message.text,
-          style: TextStyle(
-            color: message.senderId == user?.id ? Colors.white : Colors.black,
-            fontSize: 18, // Adjust the font size here
+      alignment: message.senderId == user?.id
+          ? Alignment.centerRight
+          : Alignment.centerLeft,
+      child: Column(
+        crossAxisAlignment: message.senderId == user?.id
+            ? CrossAxisAlignment.end
+            : CrossAxisAlignment.start,
+        children: [
+          Text(
+            formattedTimestamp,
+            style: const TextStyle(
+              color: Colors.grey,
+              fontSize: 12,
+            ),
           ),
-        ),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+            padding: const EdgeInsets.all(12.0),
+            decoration: BoxDecoration(
+              color:
+                  message.senderId == user?.id ? Colors.blue : Colors.grey[300],
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: Text(
+              message.text,
+              style: TextStyle(
+                color:
+                    message.senderId == user?.id ? Colors.white : Colors.black,
+                fontSize: 18, // Adjust the font size here
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -109,7 +132,11 @@ class _MessagingPageState extends State<MessagingPage> {
       _textController.clear(); // Clear the text input field
 
       // Store the message in the specific chat room in Firebase Database
-      DatabaseReference messagesRef = FirebaseDatabase.instance.ref().child('chatRooms').child(widget.chatRoom.roomId).child('messages');
+      DatabaseReference messagesRef = FirebaseDatabase.instance
+          .ref()
+          .child('chatRooms')
+          .child(widget.chatRoom.roomId)
+          .child('messages');
       messagesRef.push().set({
         'senderId': user?.id,
         'text': text,
@@ -118,16 +145,19 @@ class _MessagingPageState extends State<MessagingPage> {
     }
   }
 
-
   void listenForMessages() {
-    DatabaseReference messagesRef = FirebaseDatabase.instance.ref().child('chatRooms').child(widget.chatRoom.roomId).child('messages');
+    DatabaseReference messagesRef = FirebaseDatabase.instance
+        .ref()
+        .child('chatRooms')
+        .child(widget.chatRoom.roomId)
+        .child('messages');
     messagesRef.onChildAdded.listen((event) {
-      Map<String, dynamic> messageData = event.snapshot.value as Map<String, dynamic>;
+      Map<String, dynamic> messageData =
+          event.snapshot.value as Map<String, dynamic>;
       setState(() {
         // Add the received message to the list of messages
         _messages.add(Message.fromJson(messageData));
       });
     });
   }
-
 }

@@ -56,10 +56,15 @@ class _ChatPageState extends State<ChatPage> {
 
   void createChatRoomWithUser(AppUser otherUser) {
     setState(() {
-      chatRooms.add(ChatRoom(roomId: combineStrings(otherUser.id!, user!.id!), participants: [user!,otherUser])); // Asserting that user.id is not null
+      chatRooms.add(ChatRoom(
+          roomId: combineStrings(otherUser.id!, user!.id!),
+          participants: [
+            user!,
+            otherUser
+          ])); // Asserting that user.id is not null
     });
   }
-  //TODO: add timestamps
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,7 +79,10 @@ class _ChatPageState extends State<ChatPage> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MessagingPage(chatRoom: chatRooms[index])), // Ensure MessagingPage constructor accepts a ChatRoom parameter
+                MaterialPageRoute(
+                    builder: (context) => MessagingPage(
+                        chatRoom: chatRooms[
+                            index])), // Ensure MessagingPage constructor accepts a ChatRoom parameter
               );
             },
           );
