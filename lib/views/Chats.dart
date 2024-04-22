@@ -21,29 +21,45 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   final List<ChatRoom> chatRooms = [];
   final MessagingController controller = MessagingController();
+  AppUser? user;
+
+  Future<void> _fetchUserDetails() async {
+    user = await FirebaseAuthService().fetchUserDetails();
+    setState(() {});
+  }
 
   @override
   void initState() {
     super.initState();
+    _fetchUserDetails();
     initializeChatRooms();
   }
 
   void initializeChatRooms() async {
-    String? currentUserId = await FirebaseAuthService().getCurrentUserId();
     List<AppUser> users = await controller.getAllUsers();
-    for (var user in users) {
-      if (user.id != currentUserId) {
-        createChatRoomWithUser(user);
+    for (var u in users) {
+      if (u.id != user?.id) {
+        createChatRoomWithUser(u);
       }
     }
   }
 
-  void createChatRoomWithUser(AppUser user) {
-    setState(() {
-      chatRooms.add(ChatRoom(roomId: user.id!, participants: [user])); // Asserting that user.id is not null
-    });
+  //commutative way to combine strings
+  String combineStrings(String str1, String str2) {
+    String combinedString = str1 + str2;
+    List<String> charList = combinedString.split('');
+    charList.sort();
+
+    String result = charList.join('');
+    return result;
   }
 
+  void createChatRoomWithUser(AppUser otherUser) {
+    setState(() {
+      chatRooms.add(ChatRoom(roomId: combineStrings(otherUser.id!, user!.id!), participants: [user!,otherUser])); // Asserting that user.id is not null
+    });
+  }
+  //TODO: add timestamps
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,7 +70,7 @@ class _ChatPageState extends State<ChatPage> {
         itemCount: chatRooms.length,
         itemBuilder: (context, index) {
           return ListTile(
-            title: Text('${chatRooms[index].participants[0].name}'),
+            title: Text('${chatRooms[index].participants[1].name}'),
             onTap: () {
               Navigator.push(
                 context,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
+import '../controllers/firebaseAuthService.dart';
 import '../models/message.dart';
+import 'package:pueblo_del_rio/models/user.dart';
 import 'Chats.dart'; // Import the ChatRoom model
 
 class MessagingPage extends StatefulWidget {
@@ -15,12 +17,18 @@ class MessagingPage extends StatefulWidget {
 class _MessagingPageState extends State<MessagingPage> {
   final List<Message> _messages = []; // List to hold chat messages
   final TextEditingController _textController = TextEditingController();
-  final DatabaseReference _messagesRef = FirebaseDatabase.instance.reference().child('messages');
+  final _firebaseAuthService = FirebaseAuthService();
+  AppUser? user;
+
+  Future<void> _fetchUserDetails() async {
+    user = await _firebaseAuthService.fetchUserDetails();
+    setState(() {});
+  }
 
   @override
   void initState() {
     super.initState();
-
+    _fetchUserDetails();
     // Listen for new messages in the specified chat room
     listenForMessages();
   }
@@ -29,7 +37,7 @@ class _MessagingPageState extends State<MessagingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.chatRoom.participants[0].name ?? 'Unknown'),
+        title: Text(widget.chatRoom.participants[1].name ?? 'Unknown'),
       ),
       body: Container(
         decoration: const BoxDecoration(
@@ -77,18 +85,18 @@ class _MessagingPageState extends State<MessagingPage> {
 
   Widget _buildMessageBubble(Message message) {
     return Align(
-      alignment: message.senderId == 'user' ? Alignment.centerRight : Alignment.centerLeft,
+      alignment: message.senderId == user?.id ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
         padding: const EdgeInsets.all(12.0),
         decoration: BoxDecoration(
-          color: message.senderId == 'user' ? Colors.blue : Colors.grey[300],
+          color: message.senderId == user?.id ? Colors.blue : Colors.grey[300],
           borderRadius: BorderRadius.circular(20.0),
         ),
         child: Text(
           message.text,
           style: TextStyle(
-            color: message.senderId == 'user' ? Colors.white : Colors.black,
+            color: message.senderId == user?.id ? Colors.white : Colors.black,
             fontSize: 18, // Adjust the font size here
           ),
         ),
@@ -98,16 +106,12 @@ class _MessagingPageState extends State<MessagingPage> {
 
   void _sendMessage(String text) {
     if (text.isNotEmpty) {
-      setState(() {
-        // Add the user's message to the list of messages
-        _messages.add(Message(senderId: 'user', text: text, timestamp: DateTime.now().millisecondsSinceEpoch));
-        _textController.clear(); // Clear the text input field
-      });
+      _textController.clear(); // Clear the text input field
 
       // Store the message in the specific chat room in Firebase Database
-      DatabaseReference messagesRef = FirebaseDatabase.instance.reference().child('chatRooms').child(widget.chatRoom.roomId).child('messages');
+      DatabaseReference messagesRef = FirebaseDatabase.instance.ref().child('chatRooms').child(widget.chatRoom.roomId).child('messages');
       messagesRef.push().set({
-        'senderId': 'user',
+        'senderId': user?.id,
         'text': text,
         'timestamp': DateTime.now().millisecondsSinceEpoch,
       });
@@ -116,7 +120,7 @@ class _MessagingPageState extends State<MessagingPage> {
 
 
   void listenForMessages() {
-    DatabaseReference messagesRef = FirebaseDatabase.instance.reference().child('chatRooms').child(widget.chatRoom.roomId).child('messages');
+    DatabaseReference messagesRef = FirebaseDatabase.instance.ref().child('chatRooms').child(widget.chatRoom.roomId).child('messages');
     messagesRef.onChildAdded.listen((event) {
       Map<String, dynamic> messageData = event.snapshot.value as Map<String, dynamic>;
       setState(() {
