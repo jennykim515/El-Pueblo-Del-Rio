@@ -36,6 +36,10 @@ class _HomePageState extends State<HomePage> {
     print("signedOut");
   }
 
+  void _reloadHomePage() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,7 +121,7 @@ class _HomePageState extends State<HomePage> {
                           Post post = snapshot.data![index];
                           return Column(
                             children: [
-                              PostWidget(post: post),
+                              PostWidget(post: post, user: user, reloadHomePage: _reloadHomePage,),
                               const SizedBox(height: 20), // Adjust the height as needed
                             ],
                           );

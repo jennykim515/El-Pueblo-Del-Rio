@@ -9,22 +9,29 @@ import '../controllers/postController.dart';
 import 'homePage.dart';
 import '../nav/likeButton.dart';
 
-class PostWidget extends StatelessWidget {
+class PostWidget extends StatefulWidget {
   final Post post;
+  final AppUser? user;
+  final VoidCallback? reloadHomePage;
+
+  const PostWidget({super.key, required this.post, required this.user, this.reloadHomePage});
+
+  @override
+  _PostWidgetState createState() => _PostWidgetState();
+}
+
+class _PostWidgetState extends State<PostWidget> {
   final _postController = PostController();
-  PostWidget({super.key, required this.post});
-
-  void initState() {
-    _fetchUserDetails();
-  }
-
   AppUser? user;
-  Future<void> _fetchUserDetails() async {
-    user = await FirebaseAuthService().fetchUserDetails();
+
+  @override
+  void initState() {
+    super.initState();
+    user = widget.user;
   }
 
   String getDateAsString(DateTime dateTime) {
-    if (post.date == null) {
+    if (widget.post.date == null) {
       return "";
     }
     DateTime now = DateTime.now();
@@ -39,13 +46,13 @@ class PostWidget extends StatelessWidget {
     } else if (difference.inDays < 7) {
       return '${difference.inDays}d';
     } else if (dateTime.year == now.year) {
-      return DateFormat.MMMd().format(post.date!);
+      return DateFormat.MMMd().format(widget.post.date!);
     } else {
-      return DateFormat.yMMMd().format(post.date!);
+      return DateFormat.yMMMd().format(widget.post.date!);
     }
   }
 
-  void deletePost(BuildContext context, String postId) {
+  void deletePost(String postId) {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -61,16 +68,28 @@ class PostWidget extends StatelessWidget {
                     onPressed: () {
                       _postController.deletePost(postId);
                       Navigator.pop(context);
-
-                      Navigator.pushReplacement( //reload home page to reflect deleted post
-                        context,
-                        MaterialPageRoute(builder: (context) => const HomePage()),
-                      ); //TODO: change to setState(() {});
+                      if (widget.reloadHomePage != null) {
+                        widget.reloadHomePage!();
+                      }
                     },
                     child: const Text('Delete'),
                   ),
-                ]
-        )
+                ]));
+  }
+
+  void errorPopup(){
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Permission Denied'),
+        content: const Text('You do not have permission to delete this post.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
     );
   }
 
@@ -96,7 +115,7 @@ class PostWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   FutureBuilder<AppUser>(
-                    future: post.getAuthor(),
+                    future: widget.post.getAuthor(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const CircularProgressIndicator();
@@ -129,24 +148,28 @@ class PostWidget extends StatelessWidget {
                               ),
                             ),
                             Tooltip(
-                              message: DateFormat.yMMMMEEEEd().addPattern("'at'").add_jm().format(post.date!),
-                              child: Text(getDateAsString(post.date!) ?? '', style: Theme.of(context).textTheme.bodyLarge),
+                              message: DateFormat.yMMMMEEEEd()
+                                  .addPattern("'at'")
+                                  .add_jm()
+                                  .format(widget.post.date!),
+                              child: Text(
+                                  getDateAsString(widget.post.date!) ?? '',
+                                  style: Theme.of(context).textTheme.bodyLarge),
                             ),
-                            // TODO: make it so only I can delete
                             PopupMenuButton<String>(
                               child: const Icon(
                                 Icons.more_horiz,
                               ),
-                              onSelected: (value) {
+                              onSelected: (value) async {
                                 if (value == 'delete') {
-                                  // print(post.authorRef);
-                                  // print(user?.id);
-                                  // if (post.getAuthor() == user) {
-                                    deletePost(context, post.id);
-                                  // }
-                                  // else {
-                                  //   //error popup
-                                  // }
+                                  AppUser? author =
+                                      await widget.post.getAuthor();
+                                  if (author.id == user?.id ||
+                                      user?.userType == "Officer") {
+                                    deletePost(widget.post.id);
+                                  } else {
+                                    errorPopup();
+                                  }
                                 }
                               },
                               itemBuilder: (BuildContext context) =>
@@ -165,7 +188,7 @@ class PostWidget extends StatelessWidget {
                     },
                   ),
                   Text(
-                    post.title, // Display the post's title
+                    widget.post.title, // Display the post's title
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
@@ -173,8 +196,8 @@ class PostWidget extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8), // Space between title and body
-                  Text(post.body),
-                  if (post.imageUrl != null)
+                  Text(widget.post.body),
+                  if (widget.post.imageUrl != null)
                     Container(
                       height: 200,
                       margin: const EdgeInsets.only(top: 8.0),
@@ -182,11 +205,11 @@ class PostWidget extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8.0),
                         image: DecorationImage(
                           fit: BoxFit.cover,
-                          image: NetworkImage(post.imageUrl!),
+                          image: NetworkImage(widget.post.imageUrl!),
                         ),
                       ),
                     ),
-                  _ActionsRow(item: post),
+                  _ActionsRow(item: widget.post),
                 ],
               ),
             ),
