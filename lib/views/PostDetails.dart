@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pueblo_del_rio/models/post.dart';
 import 'package:pueblo_del_rio/models/user.dart';
+import 'package:pueblo_del_rio/views/userProfile.dart';
 
 class PostDetails extends StatelessWidget {
   final Post post;
@@ -31,11 +32,19 @@ class PostDetails extends StatelessWidget {
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold));
                 } else if (snapshot.hasData) {
-                  return Text(
-                    'Author: ${snapshot.data!.name}',
-                    // Assuming AppUser has a name field
-                    style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold),
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const UserProfileScreen(viewOnly: true),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      'Author: ${snapshot.data!.name}',
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue),
+                    ),
                   );
                 } else {
                   return const Text("Author not found",

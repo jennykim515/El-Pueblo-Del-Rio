@@ -4,9 +4,8 @@ import 'package:intl/intl.dart'; // Import the intl package
 import 'package:pueblo_del_rio/models/post.dart';
 import 'package:pueblo_del_rio/models/user.dart';
 import 'package:pueblo_del_rio/nav/commentWidget.dart';
-import '../controllers/firebaseAuthService.dart';
+import 'package:pueblo_del_rio/views/userProfile.dart';
 import '../controllers/postController.dart';
-import 'homePage.dart';
 import '../nav/likeButton.dart';
 
 class PostWidget extends StatefulWidget {
@@ -122,65 +121,77 @@ class _PostWidgetState extends State<PostWidget> {
                       } else if (snapshot.hasError) {
                         return const Text("Error fetching author details");
                       } else if (snapshot.hasData) {
-                        return Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: RichText(
-                                overflow: TextOverflow.ellipsis,
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: snapshot.data!.name ?? "Unknown",
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 12,
-                                          color: Colors.black),
-                                    ),
-                                    TextSpan(
-                                      text: " ${snapshot.data!.userType}",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .labelSmall,
-                                    ),
-                                  ],
+                        final author = snapshot.data!;
+                        return GestureDetector(
+                          onTap: () async{
+                            final authorDetails = await author; // Wait for the author details to be fetched
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => UserProfileScreen(viewOnly: true, user: authorDetails),
+                              ),
+                            );
+                          },
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: RichText(
+                                  overflow: TextOverflow.ellipsis,
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: snapshot.data!.name ?? "Unknown",
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 12,
+                                            color: Colors.black),
+                                      ),
+                                      TextSpan(
+                                        text: " ${snapshot.data!.userType}",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelSmall,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                            Tooltip(
-                              message: DateFormat.yMMMMEEEEd()
-                                  .addPattern("'at'")
-                                  .add_jm()
-                                  .format(widget.post.date!),
-                              child: Text(
-                                  getDateAsString(widget.post.date!) ?? '',
-                                  style: Theme.of(context).textTheme.bodyLarge),
-                            ),
-                            PopupMenuButton<String>(
-                              child: const Icon(
-                                Icons.more_horiz,
+                              Tooltip(
+                                message: DateFormat.yMMMMEEEEd()
+                                    .addPattern("'at'")
+                                    .add_jm()
+                                    .format(widget.post.date!),
+                                child: Text(
+                                    getDateAsString(widget.post.date!) ?? '',
+                                    style: Theme.of(context).textTheme.bodyLarge),
                               ),
-                              onSelected: (value) async {
-                                if (value == 'delete') {
-                                  AppUser? author =
-                                      await widget.post.getAuthor();
-                                  if (author.id == user?.id ||
-                                      user?.userType == "Officer") {
-                                    deletePost(widget.post.id);
-                                  } else {
-                                    errorPopup();
+                              PopupMenuButton<String>(
+                                child: const Icon(
+                                  Icons.more_horiz,
+                                ),
+                                onSelected: (value) async {
+                                  if (value == 'delete') {
+                                    AppUser? author =
+                                    await widget.post.getAuthor();
+                                    if (author.id == user?.id ||
+                                        user?.userType == "Officer") {
+                                      deletePost(widget.post.id);
+                                    } else {
+                                      errorPopup();
+                                    }
                                   }
-                                }
-                              },
-                              itemBuilder: (BuildContext context) =>
-                                  <PopupMenuEntry<String>>[
-                                const PopupMenuItem<String>(
-                                  value: 'delete',
-                                  child: Text('Delete'),
-                                ),
-                              ],
-                            ),
-                          ],
+                                },
+                                itemBuilder: (BuildContext context) =>
+                                <PopupMenuEntry<String>>[
+                                  const PopupMenuItem<String>(
+                                    value: 'delete',
+                                    child: Text('Delete'),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         );
                       } else {
                         return const Text("Author not found");

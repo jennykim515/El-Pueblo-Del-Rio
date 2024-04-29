@@ -19,7 +19,7 @@ class _MainScreenState extends State<MainScreen> {
     const HomePage(),
     const ChatPage(),
     ResourcesPage(),
-    const UserProfileScreen(),
+    const UserProfileScreen(viewOnly: false),
   ];
 
   @override

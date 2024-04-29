@@ -6,9 +6,11 @@ import '../controllers/firebaseAuthService.dart';
 import '../models/user.dart';
 import 'package:uuid/uuid.dart'; // For generating unique file names
 
-
 class UserProfileScreen extends StatefulWidget {
-  const UserProfileScreen({super.key});
+  final bool viewOnly;
+  final AppUser? user;
+
+  const UserProfileScreen({super.key, required this.viewOnly, this.user});
 
   @override
   _UserProfileScreenState createState() => _UserProfileScreenState();
@@ -24,11 +26,17 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   String? imageUrl; //will be set in "getImage"
   html.File? _selectedFile; // Add this line to store the selected file
 
-
   @override
   void initState() {
     super.initState();
-    _fetchUserDetails();
+    if (widget.user == null) {
+      _fetchUserDetails();
+    } else {
+      _user = widget.user;
+      _nameController.text = _user?.name ?? '';
+      _emailController.text = _user?.email ?? '';
+      _bioController.text = _user?.aboutMe ?? '';
+    }
   }
 
   void _fetchUserDetails() async {
@@ -38,8 +46,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       _nameController.text = _user?.name ?? '';
       _emailController.text = _user?.email ?? '';
       _bioController.text = _user?.aboutMe ?? '';
-
-
     });
   }
 
@@ -49,12 +55,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       appBar: AppBar(
         title: const Text('User Profile'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.save),
-            onPressed: () {
-              _saveChanges();
-            },
-          ),
+          if (!widget.viewOnly)
+            IconButton(
+              icon: const Icon(Icons.save),
+              onPressed: _saveChanges,
+            ),
         ],
       ),
       body: Container(
@@ -64,45 +69,51 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             fit: BoxFit.cover,
           ),
         ),
-        child: _user != null ? Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              CircleAvatar(
-                backgroundImage: NetworkImage(imageUrl?? "https://picsum.photos/id/1004/960/540"), // You need to replace this with the actual user image
-              ),
-
-              const SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: _getImage,
-                child: const Text('Upload Image'),
-              ),
-              const SizedBox(height:20),
-              TextField(
-                controller: _nameController,
-                decoration: const InputDecoration(labelText: 'Name'),
-              ),
-              const SizedBox(height: 10),
-              TextField(
-                controller: _emailController,
-                decoration: const InputDecoration(labelText: 'Email'),
-              ),
-              TextField(
-                controller: _bioController,
-                decoration: const InputDecoration(labelText: 'About me'),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _saveChanges,
-                child: const Text("Save Changes"),
-              ),
-            ],
-          ),
-        )
+        child: _user != null
+            ? Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    CircleAvatar(
+                      backgroundImage: NetworkImage(imageUrl ??
+                          "https://picsum.photos/id/1004/960/540"), // You need to replace this with the actual user image
+                    ),
+                    const SizedBox(height: 10),
+                    if (!widget.viewOnly) // Only render the button if not in view-only mode
+                      ElevatedButton(
+                        onPressed: _getImage,
+                        child: const Text('Upload Image'),
+                      ),
+                    const SizedBox(height: 20),
+                    TextField(
+                      controller: _nameController,
+                      decoration: const InputDecoration(labelText: 'Name'),
+                      enabled: !widget.viewOnly,
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: _emailController,
+                      decoration: const InputDecoration(labelText: 'Email'),
+                      enabled: !widget.viewOnly,
+                    ),
+                    TextField(
+                      controller: _bioController,
+                      decoration: const InputDecoration(labelText: 'About me'),
+                      enabled: !widget.viewOnly,
+                    ),
+                    const SizedBox(height: 20),
+                    if (!widget.viewOnly)
+                      ElevatedButton(
+                        onPressed: _saveChanges,
+                        child: const Text("Save Changes"),
+                      ),
+                  ],
+                ),
+              )
             : const Center(
-          child: CircularProgressIndicator(),
-        ),
+                child: CircularProgressIndicator(),
+              ),
       ),
     );
   }
@@ -123,7 +134,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       final task = await ref.putBlob(_selectedFile!);
       final downloadUrl = await task.ref.getDownloadURL();
 
-      await _authService.updateUserDetails(name: newName, email: newEmail, aboutMe: newBio, imageUrl: downloadUrl);
+      await _authService.updateUserDetails(
+          name: newName,
+          email: newEmail,
+          aboutMe: newBio,
+          imageUrl: downloadUrl);
       // Success, update local user object and UI
       setState(() {
         _user?.name = newName;
@@ -131,8 +146,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         _user?.aboutMe = newBio;
         _user?.imageUrl = imageUrl;
       });
-
-
     } catch (error) {
       // Handle errors, e.g., show an error dialog
       print("Error saving changes: $error");
@@ -141,11 +154,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     Navigator.of(context).pop(); // Dismiss the loading dialog
   }
 
-
   void _showLoadingDialog() {
     showDialog(
       context: context,
-      barrierDismissible: false, // User must not dismiss the dialog by tapping outside of it.
+      barrierDismissible: false,
+      // User must not dismiss the dialog by tapping outside of it.
       builder: (BuildContext context) {
         return const Dialog(
           child: Padding(
@@ -166,7 +179,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   //Pick image to upload
   void _getImage() {
-    final html.FileUploadInputElement input = html.FileUploadInputElement()..accept = 'image/*';
+    final html.FileUploadInputElement input = html.FileUploadInputElement()
+      ..accept = 'image/*';
     input.click();
     input.onChange.listen((event) async {
       final List<html.File>? files = input.files;
@@ -183,5 +197,4 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       }
     });
   }
-
 }
